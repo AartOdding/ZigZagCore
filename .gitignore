@@ -1,6 +1,11 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
+.vscode/*
+build/*
+third_party/*
+CMakeLists.txt.user
+
 *~
 *.autosave
 *.a
