@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++   -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/test_hide.dir/test_hide.cc.o CMakeFiles/test_hide.dir/testutilities.cc.o  -o test_hide  -Wl,-rpath,/Users/aart/Documents/libsigcplusplus-3.0.0/build/sigc++ ../sigc++/libsigc-3.0.2.99.1.dylib 

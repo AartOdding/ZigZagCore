@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../sigc++/tuple-utils/tuple_cdr.h
+tuple
+-
+type_traits
+-
+utility
+-
+
+../sigc++/tuple-utils/tuple_end.h
+sigc++/tuple-utils/tuple_cdr.h
+-
+
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/test_tuple_end.cc
+cassert
+-
+cstdlib
+-
+string
+-
+sigc++/tuple-utils/tuple_end.h
+-
+functional
+-
+
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/testutilities.cc
+testutilities.h
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/testutilities.h
+iostream
+-
+cstring
+-
+
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/testutilities.h
+string
+-
+sstream
+-
+

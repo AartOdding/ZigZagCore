@@ -1,0 +1,18 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+datarootdir=${prefix}
+datadir=${datarootdir}
+includedir=${prefix}/include
+
+docdir=${datarootdir}/doc/libsigc++-3.0
+doxytagfile=${docdir}/reference/libsigc++-3.0.tag
+htmlrefdir=${docdir}/reference/html
+htmlrefpub=http://library.gnome.org/devel/libsigc++/unstable/
+
+Name: libsigc++
+Description: Typesafe signal and callback system for C++
+Version: 2.99.1
+URL: http://libsigc.sourceforge.net/
+Libs: -L${libdir} -lsigc-3.0
+Cflags: -I${includedir}/sigc++-3.0 -I${libdir}/sigc++-3.0/include

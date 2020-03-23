@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../sigc++/member_method_trait.h
+sigc++config.h
+-
+
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/test_member_method_trait.cc
+cstdlib
+-
+sigc++/member_method_trait.h
+-
+type_traits
+-
+
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/testutilities.cc
+testutilities.h
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/testutilities.h
+iostream
+-
+cstring
+-
+
+/Users/aart/Documents/libsigcplusplus-3.0.0/tests/testutilities.h
+string
+-
+sstream
+-
+
+sigc++config.h
+
