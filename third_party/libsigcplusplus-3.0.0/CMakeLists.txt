@@ -71,8 +71,8 @@ enable_testing()
 
 
 add_subdirectory (sigc++)
-add_subdirectory (examples)
-add_subdirectory (tests)
+#add_subdirectory (examples)
+#add_subdirectory (tests)
 
 
 set (PROJECT_CMAKE_NAME		"${PROJECT_NAME}-3")
