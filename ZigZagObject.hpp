@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 
@@ -8,47 +9,62 @@ class ZigZagObject
 {
 public:
 
-    ZigZagObject(const std::string& name = std::string(), ZigZagObject* parent = nullptr);
+    ZigZagObject(const std::string& name, ZigZagObject* parent = nullptr);
+    ZigZagObject(ZigZagObject* parent = nullptr, const std::string& name = std::string());
+
+    virtual ~ZigZagObject();
 
     /*
      * If there is a conflict with a sibling when renaming, then the next available name will be
-     * taken, (the name with a number after it). Returns true if the intended name could be used,
-     * false if the name had to be adjusted.
-     */ 
-    bool setName(const std::string& name);
+     * taken, which would be the name with a number behind it.
+     */
+    void setName(const std::string& name);
 
     /*
-     * Reparenting is not guaranteed to be successful, because it is not allowed to create circles
-     * in the parent hierarchy. Returns true on success, else false. When an object is reparented,
-     * and there is a naming conflict with one of the new siblings the object that is being 
-     * reparented is the one that will have its name changed to keep every name unique.
+     * When an object is reparented, and there is a naming conflict with one of the new siblings 
+     * the object that is being reparented is the one that will have its name changed to keep all 
+     * the names unique. This function will throw an exception if the reparenting were to create
+     * a loop in the parent hierarchy.
      */
-    bool setParent(ZigZagObject* parent);
+    virtual void setParent(ZigZagObject* parent);
 
     
     const std::string& getName() const;
     const std::string& getFullName() const;
+
     
     ZigZagObject* getParent() const;
 
     bool hasChildren() const;
+    bool hasChildWithName(std::string_view childName) const;
     bool hasChildWithName(const std::string& childName) const;
+
     const std::vector<ZigZagObject*>& getChildren() const;
+    ZigZagObject* getChildWithName(std::string_view childName) const;
     ZigZagObject* getChildWithName(const std::string& childName) const;
 
     /*
      * Returns the root object of this tree of ZigZag Objects. If this is the root itself, then 
      * this is returned.
      */
-    ZigZagObject* getRootObject() const;
+    ZigZagObject* getRootObject();
+    const ZigZagObject* getRootObject() const;
 
     /*
      * Will search in the tree of objects that this object is part of for an object that matches 
      * the full name.
      */
-    ZigZagObject* findObjectWithFullName(const std::string& objectFullName);
+    ZigZagObject* getObjectWithFullName(const std::string& objectFullName);
+    const ZigZagObject* getObjectWithFullName(const std::string& objectFullName) const;
+
+    bool isChildOf(const ZigZagObject* potentialParent, bool directOnly) const;
+    bool isParentOf(const ZigZagObject* potentialChild, bool directOnly) const;
+
 
 private:
+
+    void updateFullName();
+    bool removeFromParent();
 
     std::string m_name;
     std::string m_fullName;
