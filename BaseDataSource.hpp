@@ -1,9 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include "ZigZagObject.hpp"
 #include "ZigZagParentChild.hpp"
 
 class BaseOperator;
+class BaseDataInput;
 
 
 class BaseDataSource : public ZigZagObject,
@@ -11,12 +14,24 @@ class BaseDataSource : public ZigZagObject,
 {
 public:
 
-    BaseDataSource(const std::string& name, ZigZagObject* parent = nullptr);
-    BaseDataSource(ZigZagObject* parent = nullptr, const std::string& name = std::string());
+    BaseDataSource(ZigZagObject* parent = nullptr, std::string_view name = std::string());
+
+    ~BaseDataSource();
 
     void setParent(ZigZagObject* parent) override;
 
+    bool connect(BaseDataInput* dataInput);
+    void disconnect();
+
+    bool isConnected() const;
+    bool isConnectedWith(BaseDataInput* dataInput) const;
+
+    const BaseDataSource* getConnectedDataInputs() const;
+
 private:
 
-};
+    friend class BaseDataSource;
 
+    std::vector<BaseDataSource*> m_connectedDataSources;
+
+};

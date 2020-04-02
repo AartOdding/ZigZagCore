@@ -11,11 +11,24 @@ class BaseDataInput : public ZigZagObject,
 {
 public:
 
-    BaseDataInput(const std::string& name, ZigZagObject* parent = nullptr);
-    BaseDataInput(ZigZagObject* parent = nullptr, const std::string& name = std::string());
+    BaseDataInput(ZigZagObject* parent = nullptr, std::string_view name = std::string());
+
+    virtual ~BaseDataInput();
 
     void setParent(ZigZagObject* parent) override;
 
+    virtual bool canConnectWith(const BaseDataSource* dataSource) const = 0;
+
+    bool connect(BaseDataSource* dataSource);
+    void disconnect();
+
+    bool isConnected() const;
+    bool isConnectedWith(const BaseDataSource* dataSource) const;
+
+    const BaseDataSource* getConnectedDataSource() const;
+
 private:
+
+    BaseDataSource* m_connectedDataSource = nullptr;
 
 };

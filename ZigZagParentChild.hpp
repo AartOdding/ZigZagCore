@@ -1,13 +1,12 @@
 #pragma once
 
 #include <vector>
-#include <type_traits>
 
 template<typename PARENT_TYPE, typename CHILD_TYPE>
 class ZigZagParent;
 
 /*
- *  No virtual destructors because these classes should not be used as polymorphically.
+ *  No virtual destructors because these classes should not be used polymorphically.
  */
 
 
@@ -19,13 +18,15 @@ public:
     ZigZagChild(PARENT_TYPE* parent);
     ~ZigZagChild();
 
+protected:
+
     void setParent(PARENT_TYPE* parent);
 
 private:
 
     friend class ZigZagParent<PARENT_TYPE, CHILD_TYPE>;
 
-    PARENT_TYPE* m_parent;
+    PARENT_TYPE* m_parent = nullptr;
 
 };
 
@@ -37,15 +38,14 @@ class ZigZagParent
 public:
 
     ~ZigZagParent();
+
+protected:
     
     const std::vector<CHILD_TYPE*>& getChildren() const;
 
 private:
 
     friend class ZigZagChild<CHILD_TYPE, PARENT_TYPE>;
-
-    void addChild(CHILD_TYPE* child);
-    void removeChild(CHILD_TYPE* child);
 
     std::vector<CHILD_TYPE*> m_children;
 
@@ -55,11 +55,13 @@ private:
 
 template<typename CHILD_TYPE, typename PARENT_TYPE>
 ZigZagChild<CHILD_TYPE, PARENT_TYPE>::ZigZagChild(PARENT_TYPE* parent)
-    : m_parent(parent)
 {
+    using CorrespondingParent = ZigZagParent<PARENT_TYPE, CHILD_TYPE>;
+
     if (m_parent)
     {
-        m_parent->ZigZagParent<PARENT_TYPE, CHILD_TYPE>::addChild(static_cast<CHILD_TYPE*>(this));
+        m_parent = parent;
+        m_parent->CorrespondingParent::m_children.push_back(static_cast<CHILD_TYPE*>(this));
     }
 }
 
@@ -67,9 +69,13 @@ ZigZagChild<CHILD_TYPE, PARENT_TYPE>::ZigZagChild(PARENT_TYPE* parent)
 template<typename CHILD_TYPE, typename PARENT_TYPE>
 ZigZagChild<CHILD_TYPE, PARENT_TYPE>::~ZigZagChild()
 {
+    using CorrespondingParent = ZigZagParent<PARENT_TYPE, CHILD_TYPE>;
+
     if (m_parent)
     {
-        m_parent->ZigZagParent<PARENT_TYPE, CHILD_TYPE>::removeChild(static_cast<CHILD_TYPE*>(this));
+        auto siblings = &m_parent->CorrespondingParent::m_children;
+        auto thisPos = std::find(siblings->begin(), siblings->end(), static_cast<CHILD_TYPE*>(this));
+        if (thisPos != siblings->end()) siblings->erase(thisPos);
         m_parent = nullptr;
     }
 }
@@ -78,15 +84,19 @@ ZigZagChild<CHILD_TYPE, PARENT_TYPE>::~ZigZagChild()
 template<typename CHILD_TYPE, typename PARENT_TYPE>
 void ZigZagChild<CHILD_TYPE, PARENT_TYPE>::setParent(PARENT_TYPE* parent)
 {
+    using CorrespondingParent = ZigZagParent<PARENT_TYPE, CHILD_TYPE>;
+
     if (m_parent)
     {
-        m_parent->ZigZagParent<PARENT_TYPE, CHILD_TYPE>::removeChild(static_cast<CHILD_TYPE*>(this));
+        auto siblings = &m_parent->CorrespondingParent::m_children;
+        auto thisPos = std::find(siblings->begin(), siblings->end(), static_cast<CHILD_TYPE*>(this));
+        if (thisPos != siblings->end()) siblings->erase(thisPos);
         m_parent = nullptr;
     }
     if (parent)
     {
         m_parent = parent;
-        m_parent->ZigZagParent<PARENT_TYPE, CHILD_TYPE>::addChild(static_cast<CHILD_TYPE*>(this));
+        m_parent->CorrespondingParent::m_children.push_back(static_cast<CHILD_TYPE*>(this));
     }
 }
 
@@ -94,9 +104,11 @@ void ZigZagChild<CHILD_TYPE, PARENT_TYPE>::setParent(PARENT_TYPE* parent)
 template<typename PARENT_TYPE, typename CHILD_TYPE>
 ZigZagParent<PARENT_TYPE, CHILD_TYPE>::~ZigZagParent()
 {
+    using CorrespondingChild = ZigZagChild<CHILD_TYPE, PARENT_TYPE>; 
+    
     for (auto child : m_children)
     {
-        child->ZigZagChild<CHILD_TYPE, PARENT_TYPE>::m_parent = nullptr;
+        child->CorrespondingChild::m_parent = nullptr;
     }
     m_children.clear();
 }
@@ -106,23 +118,4 @@ template<typename PARENT_TYPE, typename CHILD_TYPE>
 const std::vector<CHILD_TYPE*>& ZigZagParent<PARENT_TYPE, CHILD_TYPE>::getChildren() const
 {
     return m_children;
-}
-
-
-template<typename PARENT_TYPE, typename CHILD_TYPE>
-void ZigZagParent<PARENT_TYPE, CHILD_TYPE>::addChild(CHILD_TYPE* child)
-{
-    m_children.push_back(child);
-}
-
-
-template<typename PARENT_TYPE, typename CHILD_TYPE>
-void ZigZagParent<PARENT_TYPE, CHILD_TYPE>::removeChild(CHILD_TYPE* child)
-{
-    auto it = std::find(m_children.begin(), m_children.end(), child);
-
-    if (it != m_children.end())
-    {
-        m_children.erase(it);
-    }
 }

@@ -2,16 +2,18 @@
 #include "BaseOperator.hpp"
 
 
-BaseDataInput::BaseDataInput(const std::string& name, ZigZagObject* parent)
-    : BaseDataInput(parent, name)
-{ }
 
-
-BaseDataInput::BaseDataInput(ZigZagObject* parent, const std::string& name)
+BaseDataInput::BaseDataInput(ZigZagObject* parent, std::string_view name)
     : ZigZagObject(parent, name),
       ZigZagChild<BaseDataInput, BaseOperator>(dynamic_cast<BaseOperator*>(parent))
 {
     
+}
+
+
+BaseDataInput::~BaseDataInput()
+{
+
 }
 
 

@@ -47,7 +47,7 @@ static bool isCharacterAllowed(char character)
 }
 
 
-static std::string cleanName(const std::string& name)
+static std::string cleanName(std::string_view name)
 {
     std::string cleaned;
     cleaned.reserve(name.size() + 1);
@@ -130,12 +130,8 @@ static std::tuple<bool, int, int> getTrailingNumber(const std::string& string)
 
 
 
-ZigZagObject::ZigZagObject(const std::string& name, ZigZagObject* parent)
-    : ZigZagObject(parent, name)
-{ }
 
-
-ZigZagObject::ZigZagObject(ZigZagObject* parent, const std::string& name)
+ZigZagObject::ZigZagObject(ZigZagObject* parent, std::string_view name)
     : m_parent(parent)
 {
     /*
@@ -170,7 +166,7 @@ ZigZagObject::~ZigZagObject()
 }
 
 
-void ZigZagObject::setName(const std::string& name)
+void ZigZagObject::setName(std::string_view name)
 {
     std::string cleanedName = cleanName(name);
 
@@ -277,19 +273,6 @@ bool ZigZagObject::hasChildWithName(std::string_view childName) const
 }
 
 
-bool ZigZagObject::hasChildWithName(const std::string& childName) const
-{
-    for (ZigZagObject* child : m_children)
-    {
-        if (child && child->m_name == childName)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
 const std::vector<ZigZagObject*>& ZigZagObject::getChildren() const
 {
     return m_children;
@@ -297,19 +280,6 @@ const std::vector<ZigZagObject*>& ZigZagObject::getChildren() const
 
 
 ZigZagObject* ZigZagObject::getChildWithName(std::string_view childName) const
-{
-    for (ZigZagObject* child : m_children)
-    {
-        if (child && child->m_name == childName)
-        {
-            return child;
-        }
-    }
-    return nullptr;
-}
-
-
-ZigZagObject* ZigZagObject::getChildWithName(const std::string& childName) const
 {
     for (ZigZagObject* child : m_children)
     {

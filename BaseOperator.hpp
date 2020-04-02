@@ -12,8 +12,7 @@ class BaseOperator : public ZigZagObject,
 {
 public:
 
-    BaseOperator(const std::string& name, ZigZagObject* parent = nullptr);
-    BaseOperator(ZigZagObject* parent = nullptr, const std::string& name = std::string());
+    BaseOperator(ZigZagObject* parent = nullptr, std::string_view name = std::string());
 
     //virtual void execute() = 0;
 
@@ -25,8 +24,5 @@ public:
 
 private:
 
-    //friend class BaseDataSource;
-
-    //std::vector<BaseDataSource*> m_dataSources;
 
 };

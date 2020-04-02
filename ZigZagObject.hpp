@@ -9,8 +9,7 @@ class ZigZagObject
 {
 public:
 
-    ZigZagObject(const std::string& name, ZigZagObject* parent = nullptr);
-    ZigZagObject(ZigZagObject* parent = nullptr, const std::string& name = std::string());
+    ZigZagObject(ZigZagObject* parent = nullptr, std::string_view name = std::string());
 
     virtual ~ZigZagObject();
 
@@ -18,7 +17,7 @@ public:
      * If there is a conflict with a sibling when renaming, then the next available name will be
      * taken, which would be the name with a number behind it.
      */
-    void setName(const std::string& name);
+    void setName(std::string_view name);
 
     /*
      * When an object is reparented, and there is a naming conflict with one of the new siblings 
@@ -37,11 +36,9 @@ public:
 
     bool hasChildren() const;
     bool hasChildWithName(std::string_view childName) const;
-    bool hasChildWithName(const std::string& childName) const;
 
     const std::vector<ZigZagObject*>& getChildren() const;
     ZigZagObject* getChildWithName(std::string_view childName) const;
-    ZigZagObject* getChildWithName(const std::string& childName) const;
 
     /*
      * Returns the root object of this tree of ZigZag Objects. If this is the root itself, then 
