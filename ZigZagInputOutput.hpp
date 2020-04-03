@@ -79,7 +79,11 @@ bool connect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TY
         {
             disconnect(static_cast<ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>*>(input->m_connectedOutput), input);
         }
+        input->m_connectedOutput = static_cast<OUTPUT_TYPE*>(output);
+        output->m_connectedInputs->push_back(static_cast<INPUT_TYPE*>(input));
+        return true;
     }
+    return false;
 }
 
 
@@ -94,7 +98,9 @@ bool disconnect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT
                 output->m_connectedInputs.begin(), 
                 output->m_connectedInputs.end(), 
                 static_cast<INPUT_TYPE*>(input)));
+        return true;
     }
+    return false;
 }
 
 
