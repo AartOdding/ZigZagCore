@@ -1,16 +1,16 @@
 #pragma once
 
-#include "BaseDataSource.hpp"
+#include "ZigZag/BaseDataSource.hpp"
 
 
 template<typename T>
-class DataSource : public BaseDataSource
+class DataSource : public ZigZag::BaseDataSource
 {
 public:
 
 
-    DataSource(ZigZagObject* parent, std::string_view, T* data)
-        : BaseDataSource(parent, name),
+    DataSource(ZigZag::Object* parent, std::string_view name, T* data)
+        : ZigZag::BaseDataSource(parent, name),
           m_data(data)
     { }
 

@@ -10,7 +10,7 @@ class DataInput : public BaseDataInput
 public:
 
 
-    DataSource(ZigZagObject* parent, std::string_view name)
+    DataSource(Object* parent, std::string_view name)
         : BaseDataSource(parent, name)
     { }
 

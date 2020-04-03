@@ -1,19 +1,21 @@
 #pragma once
 
-#include "ZigZagObject.hpp"
-#include "ZigZagParentChild.hpp"
-#include "BaseDataSource.hpp"
-#include "BaseDataInput.hpp"
+#include "ZigZag/Object.hpp"
+#include "ZigZag/ZigZagParentChild.hpp"
+#include "ZigZag/BaseDataSource.hpp"
+#include "ZigZag/BaseDataInput.hpp"
 
 
+namespace ZigZag
+{
 
-class BaseOperator : public ZigZagObject,
+class BaseOperator : public Object,
                      public ZigZagParent<BaseOperator, BaseDataSource>,
                      public ZigZagParent<BaseOperator, BaseDataInput>
 {
 public:
 
-    BaseOperator(ZigZagObject* parent = nullptr, std::string_view name = std::string());
+    BaseOperator(Object* parent = nullptr, std::string_view name = std::string());
 
     //virtual void execute() = 0;
 
@@ -27,3 +29,5 @@ private:
 
 
 };
+
+}

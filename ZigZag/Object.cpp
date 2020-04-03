@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <tuple>
 
-#include "ZigZagObject.hpp"
+#include "ZigZag/Object.hpp"
 
 
 static std::string specialAllowedCharacters = "_-*";
@@ -128,10 +128,11 @@ static std::tuple<bool, int, int> getTrailingNumber(const std::string& string)
 
 //---------------------------------------------------------------------------------
 
+namespace ZigZag
+{
 
 
-
-ZigZagObject::ZigZagObject(ZigZagObject* parent, std::string_view name)
+Object::Object(Object* parent, std::string_view name)
     : m_parent(parent)
 {
     /*
@@ -154,11 +155,11 @@ ZigZagObject::ZigZagObject(ZigZagObject* parent, std::string_view name)
 }
 
 
-ZigZagObject::~ZigZagObject()
+Object::~Object()
 {
     removeFromParent();
 
-    for (ZigZagObject* child : m_children)
+    for (Object* child : m_children)
     {
         child->m_parent = nullptr;
         child->updateFullName();
@@ -166,7 +167,7 @@ ZigZagObject::~ZigZagObject()
 }
 
 
-void ZigZagObject::setName(std::string_view name)
+void Object::setName(std::string_view name)
 {
     std::string cleanedName = cleanName(name);
 
@@ -202,7 +203,7 @@ void ZigZagObject::setName(std::string_view name)
 
             m_name = cleanedName;
         }
-        for (ZigZagObject* child : m_children)
+        for (Object* child : m_children)
         {
             child->updateFullName();
         }
@@ -210,7 +211,7 @@ void ZigZagObject::setName(std::string_view name)
 }
 
 
-void ZigZagObject::setParent(ZigZagObject* parent)
+void Object::setParent(Object* parent)
 {
     if (m_parent != parent)
     {
@@ -236,33 +237,33 @@ void ZigZagObject::setParent(ZigZagObject* parent)
 }
 
 
-const std::string& ZigZagObject::getName() const
+const std::string& Object::getName() const
 {
     return m_name;
 }
 
 
-const std::string& ZigZagObject::getFullName() const
+const std::string& Object::getFullName() const
 {
     return m_fullName;
 }
 
 
-ZigZagObject* ZigZagObject::getParent() const
+Object* Object::getParent() const
 {
     return m_parent;
 }
 
 
-bool ZigZagObject::hasChildren() const
+bool Object::hasChildren() const
 {
     return !m_children.empty();
 }
 
 
-bool ZigZagObject::hasChildWithName(std::string_view childName) const
+bool Object::hasChildWithName(std::string_view childName) const
 {
-    for (ZigZagObject* child : m_children)
+    for (Object* child : m_children)
     {
         if (child && child->m_name == childName)
         {
@@ -273,15 +274,15 @@ bool ZigZagObject::hasChildWithName(std::string_view childName) const
 }
 
 
-const std::vector<ZigZagObject*>& ZigZagObject::getChildren() const
+const std::vector<Object*>& Object::getChildren() const
 {
     return m_children;
 }
 
 
-ZigZagObject* ZigZagObject::getChildWithName(std::string_view childName) const
+Object* Object::getChildWithName(std::string_view childName) const
 {
-    for (ZigZagObject* child : m_children)
+    for (Object* child : m_children)
     {
         if (child && child->m_name == childName)
         {
@@ -292,9 +293,9 @@ ZigZagObject* ZigZagObject::getChildWithName(std::string_view childName) const
 }
 
 
-ZigZagObject* ZigZagObject::getRootObject()
+Object* Object::getRootObject()
 {
-    ZigZagObject* root = this;
+    Object* root = this;
     
     while(root->m_parent)
     {
@@ -304,9 +305,9 @@ ZigZagObject* ZigZagObject::getRootObject()
 }
 
 
-const ZigZagObject* ZigZagObject::getRootObject() const
+const Object* Object::getRootObject() const
 {
-    const ZigZagObject* root = this;
+    const Object* root = this;
 
     while(root->m_parent)
     {
@@ -316,11 +317,11 @@ const ZigZagObject* ZigZagObject::getRootObject() const
 }
 
 
-ZigZagObject* ZigZagObject::getObjectWithFullName(const std::string& objectFullName)
+Object* Object::getObjectWithFullName(const std::string& objectFullName)
 {
     /*
-    ZigZagObject* root = getRootObject();
-    ZigZagObject* current = root;
+    Object* root = getRootObject();
+    Object* current = root;
     int currentBegin = 0;
 
     do
@@ -342,18 +343,18 @@ ZigZagObject* ZigZagObject::getObjectWithFullName(const std::string& objectFullN
 }
 
 
-const ZigZagObject* ZigZagObject::getObjectWithFullName(const std::string& objectFullName) const
+const Object* Object::getObjectWithFullName(const std::string& objectFullName) const
 {
     return nullptr;
 }
 
 
-bool ZigZagObject::isChildOf(const ZigZagObject* potentialParent, bool directOnly) const
+bool Object::isChildOf(const Object* potentialParent, bool directOnly) const
 {
     if (!potentialParent) return false;
     if (directOnly) return potentialParent == m_parent;
 
-    ZigZagObject* myParent = m_parent;
+    Object* myParent = m_parent;
 
     while(myParent)
     {
@@ -367,7 +368,7 @@ bool ZigZagObject::isChildOf(const ZigZagObject* potentialParent, bool directOnl
 }
 
 
-bool ZigZagObject::isParentOf(const ZigZagObject* potentialChild, bool directOnly) const
+bool Object::isParentOf(const Object* potentialChild, bool directOnly) const
 {
     if (potentialChild)
     {
@@ -377,7 +378,7 @@ bool ZigZagObject::isParentOf(const ZigZagObject* potentialChild, bool directOnl
 }
 
 
-void ZigZagObject::updateFullName()
+void Object::updateFullName()
 {
     if (m_parent)
     {
@@ -391,13 +392,13 @@ void ZigZagObject::updateFullName()
     {
         m_fullName = m_name;
     }
-    for (ZigZagObject* child : m_children)
+    for (Object* child : m_children)
     {
         child->updateFullName();
     }
 }
 
-bool ZigZagObject::removeFromParent()
+bool Object::removeFromParent()
 {
     if (m_parent)
     {
@@ -410,4 +411,6 @@ bool ZigZagObject::removeFromParent()
         }
     }
     return false;
+}
+
 }

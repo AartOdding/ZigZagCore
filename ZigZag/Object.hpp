@@ -5,13 +5,16 @@
 #include <vector>
 
 
-class ZigZagObject
+namespace ZigZag
+{
+
+class Object
 {
 public:
 
-    ZigZagObject(ZigZagObject* parent = nullptr, std::string_view name = std::string());
+    Object(Object* parent = nullptr, std::string_view name = std::string());
 
-    virtual ~ZigZagObject();
+    virtual ~Object();
 
     /*
      * If there is a conflict with a sibling when renaming, then the next available name will be
@@ -25,37 +28,37 @@ public:
      * the names unique. This function will throw an exception if the reparenting were to create
      * a loop in the parent hierarchy.
      */
-    virtual void setParent(ZigZagObject* parent);
+    virtual void setParent(Object* parent);
 
     
     const std::string& getName() const;
     const std::string& getFullName() const;
 
     
-    ZigZagObject* getParent() const;
+    Object* getParent() const;
 
     bool hasChildren() const;
     bool hasChildWithName(std::string_view childName) const;
 
-    const std::vector<ZigZagObject*>& getChildren() const;
-    ZigZagObject* getChildWithName(std::string_view childName) const;
+    const std::vector<Object*>& getChildren() const;
+    Object* getChildWithName(std::string_view childName) const;
 
     /*
      * Returns the root object of this tree of ZigZag Objects. If this is the root itself, then 
      * this is returned.
      */
-    ZigZagObject* getRootObject();
-    const ZigZagObject* getRootObject() const;
+    Object* getRootObject();
+    const Object* getRootObject() const;
 
     /*
      * Will search in the tree of objects that this object is part of for an object that matches 
      * the full name.
      */
-    ZigZagObject* getObjectWithFullName(const std::string& objectFullName);
-    const ZigZagObject* getObjectWithFullName(const std::string& objectFullName) const;
+    Object* getObjectWithFullName(const std::string& objectFullName);
+    const Object* getObjectWithFullName(const std::string& objectFullName) const;
 
-    bool isChildOf(const ZigZagObject* potentialParent, bool directOnly) const;
-    bool isParentOf(const ZigZagObject* potentialChild, bool directOnly) const;
+    bool isChildOf(const Object* potentialParent, bool directOnly) const;
+    bool isParentOf(const Object* potentialChild, bool directOnly) const;
 
 
 private:
@@ -66,8 +69,9 @@ private:
     std::string m_name;
     std::string m_fullName;
 
-    ZigZagObject* m_parent;
-    std::vector<ZigZagObject*> m_children;
+    Object* m_parent;
+    std::vector<Object*> m_children;
 
 };
 
+}

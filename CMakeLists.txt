@@ -7,11 +7,11 @@ project(ZigZagMin)
 
 add_executable(ZigZag
     main.cpp
-    ZigZagObject.cpp
-    BaseOperator.cpp
-    BaseDataSource.cpp
-    BaseDataInput.cpp
+    ZigZag/Object.cpp
+    ZigZag/BaseOperator.cpp
+    ZigZag/BaseDataSource.cpp
+    ZigZag/BaseDataInput.cpp
 )
 
 #${CMAKE_CURRENT_SOURCE_DIR}
-target_include_directories(ZigZag PRIVATE third_party/boost_1_72_0)
+target_include_directories(ZigZag PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

@@ -1,9 +1,12 @@
-#include "BaseOperator.hpp"
+#include "ZigZag/BaseOperator.hpp"
 
 
 
-BaseOperator::BaseOperator(ZigZagObject* parent, std::string_view name)
-    : ZigZagObject(parent, name)
+namespace ZigZag
+{
+
+BaseOperator::BaseOperator(Object* parent, std::string_view name)
+    : Object(parent, name)
 { }
 
 
@@ -16,4 +19,6 @@ const std::vector<BaseDataSource*>& BaseOperator::getDataSources() const
 const std::vector<BaseDataInput*>& BaseOperator::getDataInputs() const
 {
     return ZigZagParent<BaseOperator, BaseDataInput>::getChildren();
+}
+
 }

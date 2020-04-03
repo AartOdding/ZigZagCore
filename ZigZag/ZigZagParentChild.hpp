@@ -2,6 +2,9 @@
 
 #include <vector>
 
+namespace ZigZag
+{
+
 template<typename PARENT_TYPE, typename CHILD_TYPE>
 class ZigZagParent;
 
@@ -118,4 +121,6 @@ template<typename PARENT_TYPE, typename CHILD_TYPE>
 const std::vector<CHILD_TYPE*>& ZigZagParent<PARENT_TYPE, CHILD_TYPE>::getChildren() const
 {
     return m_children;
+}
+
 }

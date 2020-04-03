@@ -5,6 +5,9 @@
 #include <vector>
 
 
+namespace ZigZag
+{
+
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
 class ZigZagOutput;
 
@@ -177,4 +180,6 @@ template<typename OUTPUT_TYPE, typename INPUT_TYPE>
 const std::vector<INPUT_TYPE*>& ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>::getConnectedInputs() const
 {
     return m_connectedInputs;
+}
+
 }
