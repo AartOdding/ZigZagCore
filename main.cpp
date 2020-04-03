@@ -2,14 +2,14 @@
 
 #include "ZigZagObject.hpp"
 #include "BaseOperator.hpp"
-
-using namespace std;
+#include "ZigZagParentChild.hpp"
+#include "ZigZagInputOutput.hpp"
 
 
 
 int main()
 {
-    cout << "Hello World!" << endl;
+    std::cout << "Hello World!" << std::endl;
 
     ZigZagObject obj1(nullptr, "aaa");
     ZigZagObject obj3(&obj1, "b2  ");
@@ -28,6 +28,12 @@ int main()
     BaseDataSource* data3 = new BaseDataSource(&op1, "data3");
 
     BaseOperator op2(nullptr, "op2");
+    BaseDataInput* input1 = new BaseDataInput(&op2, "inout1");
+
+    //ZigZagOutput<BaseDataSource, BaseDataInput>*, ZigZagInput<BaseDataInput, BaseDataSource>*
+    //connect(static_cast<ZigZagOutput<BaseDataSource, BaseDataInput>*>(data1), static_cast<ZigZagInput<BaseDataInput, BaseDataSource>*>(input1));
+    connect(data3, input1);
+    disconnect(data3, input1);
 
     std::cout << "op1:\n";
 
@@ -64,9 +70,5 @@ int main()
     ZigZagObject obj6(" b", &obj1);
     ZigZagObject obj5(" ", &obj1);*/
 
-    cout << "Hello World!" << endl;
-    cout << "Hello World!" << endl;
-    cout << "Hello World!" << endl;
-    cout << "Hello World!" << endl;
     return 0;
 }

@@ -58,7 +58,7 @@ ZigZagChild<CHILD_TYPE, PARENT_TYPE>::ZigZagChild(PARENT_TYPE* parent)
 {
     using CorrespondingParent = ZigZagParent<PARENT_TYPE, CHILD_TYPE>;
 
-    if (m_parent)
+    if (parent)
     {
         m_parent = parent;
         m_parent->CorrespondingParent::m_children.push_back(static_cast<CHILD_TYPE*>(this));

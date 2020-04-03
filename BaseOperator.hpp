@@ -6,6 +6,7 @@
 #include "BaseDataInput.hpp"
 
 
+
 class BaseOperator : public ZigZagObject,
                      public ZigZagParent<BaseOperator, BaseDataSource>,
                      public ZigZagParent<BaseOperator, BaseDataInput>

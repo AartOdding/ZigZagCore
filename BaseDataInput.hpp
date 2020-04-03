@@ -2,12 +2,16 @@
 
 #include "ZigZagObject.hpp"
 #include "ZigZagParentChild.hpp"
+#include "ZigZagInputOutput.hpp"
 
 class BaseOperator;
+class BaseDataSource;
+
 
 
 class BaseDataInput : public ZigZagObject,
-                      public ZigZagChild<BaseDataInput, BaseOperator>
+                      public ZigZagChild<BaseDataInput, BaseOperator>,
+                      public ZigZagInput<BaseDataInput, BaseDataSource>
 {
 public:
 
@@ -17,18 +21,6 @@ public:
 
     void setParent(ZigZagObject* parent) override;
 
-    virtual bool canConnectWith(const BaseDataSource* dataSource) const = 0;
-
-    bool connect(BaseDataSource* dataSource);
-    void disconnect();
-
-    bool isConnected() const;
-    bool isConnectedWith(const BaseDataSource* dataSource) const;
-
-    const BaseDataSource* getConnectedDataSource() const;
-
-private:
-
-    BaseDataSource* m_connectedDataSource = nullptr;
+    //virtual bool canConnectTo(const BaseDataSource* dataSource) const = 0;
 
 };

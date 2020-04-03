@@ -10,6 +10,7 @@ add_executable(ZigZag
     ZigZagObject.cpp
     BaseOperator.cpp
     BaseDataSource.cpp
+    BaseDataInput.cpp
 )
 
 #${CMAKE_CURRENT_SOURCE_DIR}

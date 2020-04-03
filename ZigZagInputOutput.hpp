@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <type_traits>
 
 
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
@@ -9,15 +10,23 @@ class ZigZagOutput;
 template<typename INPUT_TYPE, typename OUTPUT_TYPE>
 class ZigZagInput;
 
+//template<typename OUTPUT_TYPE, typename INPUT_TYPE>
+//bool connect(OUTPUT_TYPE* output, INPUT_TYPE* input);
+/*
+template<typename OUTPUT_TYPE, typename INPUT_TYPE>
+bool disconnect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
+*/
+/*
+ *  No virtual destructors because these classes should not be used polymorphically.
+ */
+
+
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
 bool connect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
 
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
 bool disconnect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
 
-/*
- *  No virtual destructors because these classes should not be used polymorphically.
- */
 
 
 template<typename INPUT_TYPE, typename OUTPUT_TYPE>
@@ -28,15 +37,18 @@ public:
     ~ZigZagInput();
 
     bool isConnected();
-    bool isConnectedWith(const OUTPUT_TYPE* output) const;
+    bool isConnectedTo(const OUTPUT_TYPE* output) const;
 
     const OUTPUT_TYPE* getConnectedOutput() const;
 
+    //void disconnect();
+    //bool disconnectFrom(OUTPUT_TYPE* output);
 
 private:
 
-    friend bool connect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
-    friend bool disconnect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
+    //friend bool connect(OUTPUT_TYPE* output, INPUT_TYPE* input);
+    friend bool connect<OUTPUT_TYPE, INPUT_TYPE>(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
+    friend bool disconnect<OUTPUT_TYPE, INPUT_TYPE>(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
 
     OUTPUT_TYPE* m_connectedOutput = nullptr;
 
@@ -53,36 +65,40 @@ public:
     ~ZigZagOutput();
 
     bool isConnected();
-    bool isConnectedWith(const INPUT_TYPE* input) const;
+    bool isConnectedTo(const INPUT_TYPE* input) const;
 
     const std::vector<INPUT_TYPE*>& getConnectedInputs() const;
 
+    //void disconnect();
+    //bool disconnectFrom(INPUT_TYPE* input);
 
 private:
 
-    friend bool connect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
-    friend bool disconnect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
+    //friend bool connect<OUTPUT_TYPE, INPUT_TYPE>(OUTPUT_TYPE* output, INPUT_TYPE* input);
+    friend bool connect<OUTPUT_TYPE, INPUT_TYPE>(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
+    friend bool disconnect<OUTPUT_TYPE, INPUT_TYPE>(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input);
 
     std::vector<INPUT_TYPE*> m_connectedInputs;
 
 };
 
-
+#include <iostream>
 
 
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
 bool connect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input)
 {
-    if (input && output && !input->isConnectedWith(output))
+    if (input && output && !input->isConnectedTo(static_cast<OUTPUT_TYPE*>(output)))
     {
         if (input->isConnected())
         {
             disconnect(static_cast<ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>*>(input->m_connectedOutput), input);
         }
         input->m_connectedOutput = static_cast<OUTPUT_TYPE*>(output);
-        output->m_connectedInputs->push_back(static_cast<INPUT_TYPE*>(input));
+        output->m_connectedInputs.push_back(static_cast<INPUT_TYPE*>(input));
         return true;
     }
+    std::cout << "hello" << std::endl;
     return false;
 }
 
@@ -90,7 +106,7 @@ bool connect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TY
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
 bool disconnect(ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>* output, ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>* input)
 {
-    if (input->isConnectedWith(output))
+    if (input && output && input->isConnectedTo(static_cast<OUTPUT_TYPE*>(output)))
     {
         input->m_connectedOutput = nullptr;
         output->m_connectedInputs.erase(
@@ -113,7 +129,7 @@ ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::~ZigZagInput()
 
     if (m_connectedOutput)
     {
-        disconnect(static_cast<CorrespondingOutput*>(m_connectedOutput), this);
+        //disconnect(static_cast<CorrespondingOutput*>(m_connectedOutput), this);
     }
 }
 
@@ -126,7 +142,7 @@ bool ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::isConnected()
 
 
 template<typename INPUT_TYPE, typename OUTPUT_TYPE>
-bool ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::isConnectedWith(const OUTPUT_TYPE* output) const
+bool ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::isConnectedTo(const OUTPUT_TYPE* output) const
 {
     return m_connectedOutput == output;
 }
@@ -148,7 +164,7 @@ ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>::~ZigZagOutput()
 
     for (auto input : m_connectedInputs)
     {
-        disconnect(this, static_cast<CorrespondingInput*>(input));
+        //disconnect(this, static_cast<CorrespondingInput*>(input));
     }
 }
 
@@ -161,7 +177,7 @@ bool ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>::isConnected()
 
 
 template<typename OUTPUT_TYPE, typename INPUT_TYPE>
-bool ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>::isConnectedWith(const INPUT_TYPE* input) const
+bool ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>::isConnectedTo(const INPUT_TYPE* input) const
 {
     return std::find(m_connectedInputs.begin(), m_connectedInputs.end(), input) != m_connectedInputs.end();
 }
