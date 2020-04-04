@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ZigZag/Object.hpp"
-#include "ZigZag/ZigZagParentChild.hpp"
+#include "ZigZag/ParentChildRelationship.hpp"
 #include "ZigZag/BaseDataSource.hpp"
 #include "ZigZag/BaseDataInput.hpp"
 

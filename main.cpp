@@ -2,8 +2,6 @@
 
 #include "ZigZag/Object.hpp"
 #include "ZigZag/BaseOperator.hpp"
-#include "ZigZag/ZigZagParentChild.hpp"
-#include "ZigZag/ZigZagInputOutput.hpp"
 
 #include "DataSource.hpp"
 
