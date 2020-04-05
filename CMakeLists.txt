@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 
 set( CMAKE_CXX_STANDARD 17 )
 
-project(ZigZagMin)
+project(ZigZagCoreLib)
 
 
-add_executable(ZigZag
-    main.cpp
+add_library(ZigZagCoreLib SHARED
     ZigZag/Object.cpp
     ZigZag/BaseOperator.cpp
     ZigZag/BaseDataSource.cpp
@@ -14,4 +13,4 @@ add_executable(ZigZag
 )
 
 #${CMAKE_CURRENT_SOURCE_DIR}
-target_include_directories(ZigZag PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(ZigZagCoreLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
