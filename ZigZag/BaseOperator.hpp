@@ -10,8 +10,10 @@ namespace ZigZag
 {
 
 class BaseOperator : public Object,
+                     public ZigZagChild<BaseOperator, BaseOperator>,
                      public ZigZagParent<BaseOperator, BaseDataSource>,
-                     public ZigZagParent<BaseOperator, BaseDataInput>
+                     public ZigZagParent<BaseOperator, BaseDataInput>,
+                     public ZigZagParent<BaseOperator, BaseOperator>
 {
 public:
 
@@ -22,6 +24,9 @@ public:
     virtual void onFrameStart() { }
     virtual void onFrameEnd() { }
 
+    virtual void setParent(Object* parent) override;
+
+    const std::vector<BaseOperator*>& getChildOperators() const;
     const std::vector<BaseDataSource*>& getDataSources() const;
     const std::vector<BaseDataInput*>& getDataInputs() const;
 
