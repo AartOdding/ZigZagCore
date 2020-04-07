@@ -10,6 +10,7 @@ add_library(ZigZagCoreLib
     ZigZag/BaseOperator.cpp
     ZigZag/BaseDataSource.cpp
     ZigZag/BaseDataInput.cpp
+    ZigZag/parameter/BaseParameter.cpp 
 )
 
 

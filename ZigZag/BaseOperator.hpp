@@ -11,9 +11,9 @@ namespace ZigZag
 
 class BaseOperator : public Object,
                      public ZigZagChild<BaseOperator, BaseOperator>,
+                     public ZigZagParent<BaseOperator, BaseOperator>,
                      public ZigZagParent<BaseOperator, BaseDataSource>,
-                     public ZigZagParent<BaseOperator, BaseDataInput>,
-                     public ZigZagParent<BaseOperator, BaseOperator>
+                     public ZigZagParent<BaseOperator, BaseDataInput>
 {
 public:
 

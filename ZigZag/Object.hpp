@@ -4,11 +4,16 @@
 #include <string_view>
 #include <vector>
 
+#include <ZigZag/ParentChildRelationship.hpp>
+
 
 namespace ZigZag
 {
 
-class Object
+class BaseParameter;
+
+
+class Object : public ZigZagParent<Object, BaseParameter>
 {
 public:
 
@@ -40,7 +45,7 @@ public:
     bool hasChildren() const;
     bool hasChildWithName(std::string_view childName) const;
 
-    const std::vector<Object*>& getChildren() const;
+    const std::vector<Object*>& getChildObjects() const;
     Object* getChildWithName(std::string_view childName) const;
 
     /*
@@ -60,6 +65,7 @@ public:
     bool isChildOf(const Object* potentialParent, bool directOnly) const;
     bool isParentOf(const Object* potentialChild, bool directOnly) const;
 
+    const std::vector<BaseParameter*>& getChildParameters() const;
 
 private:
 

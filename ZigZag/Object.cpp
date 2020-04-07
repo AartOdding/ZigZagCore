@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "ZigZag/Object.hpp"
+#include "ZigZag/parameter/BaseParameter.hpp"
 
 
 static std::string specialAllowedCharacters = "_-*";
@@ -139,12 +140,10 @@ Object::Object(Object* parent, std::string_view name)
     /*
      * Don't need to worry about creating parent loops here, because this object cannot
      * have any children yet, and thus it is also impossible for the parent to be a child
-     * of this. 
+     * of this. Thus there cannot be a loop.
      */
-    /*
-     * Set name when the parent does not yet has this added to its children, no need to 
-     * have parent check this, if m_name is still an empty string.
-     */
+
+    // Set name before 'this' is added as a child in the parent. m_parent has already been set at this point!
     setName(name);
 
     if (m_parent)
@@ -152,6 +151,7 @@ Object::Object(Object* parent, std::string_view name)
         m_parent->m_children.push_back(this);
     }
 
+    // In this case initializes m_fullName
     updateFullName();
 }
 
@@ -275,7 +275,7 @@ bool Object::hasChildWithName(std::string_view childName) const
 }
 
 
-const std::vector<Object*>& Object::getChildren() const
+const std::vector<Object*>& Object::getChildObjects() const
 {
     return m_children;
 }
@@ -376,6 +376,12 @@ bool Object::isParentOf(const Object* potentialChild, bool directOnly) const
         return potentialChild->isChildOf(this, directOnly);
     }
     return false;
+}
+
+
+const std::vector<BaseParameter*>& Object::getChildParameters() const
+{
+    return ZigZagParent<Object, BaseParameter>::getChildren();
 }
 
 
