@@ -1,9 +1,10 @@
 #pragma once
 
-#include "ZigZag/Object.hpp"
-#include "ZigZag/ParentChildRelationship.hpp"
-#include "ZigZag/InputOutputRelationship.hpp"
+#include <ZigZag/Object.hpp>
+#include <ZigZag/ParentChildRelationship.hpp>
+#include <ZigZag/InputOutputRelationship.hpp>
 
+#include <ZigZag/Variant.hpp>
 
 namespace ZigZag
 {

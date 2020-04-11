@@ -1,7 +1,5 @@
-#include "ZigZag/parameter/BaseParameter.hpp"
-
-
-#include "ZigZag/BaseOperator.hpp"
+#include <ZigZag/BaseParameter.hpp>
+#include <ZigZag/BaseOperator.hpp>
 
 
 namespace ZigZag

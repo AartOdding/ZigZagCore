@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ZigZag/Object.hpp"
-#include "ZigZag/ParentChildRelationship.hpp"
-#include "ZigZag/BaseDataSource.hpp"
-#include "ZigZag/BaseDataInput.hpp"
+#include <ZigZag/Object.hpp>
+#include <ZigZag/ParentChildRelationship.hpp>
+#include <ZigZag/BaseDataSource.hpp>
+#include <ZigZag/BaseDataInput.hpp>
 
 
 namespace ZigZag

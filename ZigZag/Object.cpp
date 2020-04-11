@@ -2,8 +2,8 @@
 #include <tuple>
 #include <stdexcept>
 
-#include "ZigZag/Object.hpp"
-#include "ZigZag/parameter/BaseParameter.hpp"
+#include <ZigZag/Object.hpp>
+#include <ZigZag/BaseParameter.hpp>
 
 
 static std::string specialAllowedCharacters = "_-*";

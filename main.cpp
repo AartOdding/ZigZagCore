@@ -8,7 +8,7 @@
 
 int main()
 {
-    std::cout << "Hello World!" << std::endl;
+
 
     ZigZag::Object obj1(nullptr, "aaa");
     ZigZag::Object obj3(&obj1, "b2  ");
