@@ -34,4 +34,13 @@ const std::vector<BaseParameter*>& BaseParameter::getChildParameters() const
 }
 
 
+void BaseParameter::supply(const Variant& var) const
+{
+    for (auto* par : getConnectedInputs())
+    {
+        par->consume(var);
+    }
+}
+
+
 }

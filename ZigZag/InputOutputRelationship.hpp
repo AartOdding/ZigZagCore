@@ -182,4 +182,4 @@ const std::vector<INPUT_TYPE*>& ZigZagOutput<OUTPUT_TYPE, INPUT_TYPE>::getConnec
     return m_connectedInputs;
 }
 
-}
+} // namespace ZigZag

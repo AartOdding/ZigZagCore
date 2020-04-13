@@ -27,6 +27,15 @@ public:
 
     const std::vector<BaseParameter*>& getChildParameters() const;
 
+    virtual void process() = 0;
+
+    virtual void consume(const Variant& var) = 0;
+
+    // will supply the changed value to all the consumers.
+    // This means all parameters connected to this as an input will get 
+    // consume called with var as argument.
+    void supply(const Variant& var) const;
+
 };
 
 }
