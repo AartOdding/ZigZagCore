@@ -1,12 +1,14 @@
 #pragma once
 
-#include <variant>
 #include <cstdint>
+#include <memory>
 #include <string>
-#include <vector>
-#include <utility>
-#include <unordered_map>
 #include <type_traits>
+#include <unordered_map>
+#include <utility>
+#include <variant>
+#include <vector>
+
 #include <glm/glm.hpp>
 
 #include <ZigZag/HeapValue.hpp>
@@ -57,9 +59,19 @@ public:
 
     VariantMap() = default;
 
+    VariantMap(const VariantMap& other)
+        : m_values(other.m_values)
+    { }
+
+    VariantMap& operator=(const VariantMap& other)
+    {
+        m_values = other.m_values;
+        return *this;
+    }
+    
 private:
 
-    std::unordered_map<std::string, Variant> m_values;
+    std::unordered_map<std::string, HeapValue<Variant>> m_values;
 
 };
 
