@@ -3,16 +3,12 @@
 #include <ZigZag/Object.hpp>
 #include <ZigZag/ParentChildRelationship.hpp>
 #include <ZigZag/InputOutputRelationship.hpp>
+#include <ZigZag/Variant.hpp>
 
 
 namespace ZigZag
 {
 
-class Variant
-{
-public: 
-    std::string dummy;  
-};
 
 class BaseParameter : public Object,
                       public ZigZagChild<BaseParameter, Object>,
