@@ -7,8 +7,7 @@ namespace ZigZag
 
 BaseParameter::BaseParameter(Object* parent, std::string_view name)
     : Object(parent, name),
-      ZigZagChild<BaseParameter, Object>(parent),
-      ZigZagChild<BaseParameter, BaseParameter>(dynamic_cast<BaseParameter*>(parent))
+      ZigZagChild<BaseParameter, Object>(parent)
 {
     
 }
@@ -24,21 +23,26 @@ void BaseParameter::setParent(Object* parent)
 {
     Object::setParent(parent);
     ZigZagChild<BaseParameter, Object>::setParent(parent); // no need to cast, already object.
-    ZigZagChild<BaseParameter, BaseParameter>::setParent(dynamic_cast<BaseParameter*>(parent));
 }
 
 
-const std::vector<BaseParameter*>& BaseParameter::getChildParameters() const
+void BaseParameter::processPendingChanges()
 {
-    return ZigZagParent<BaseParameter, BaseParameter>::getChildren();
+    if (m_hasPendingValue && m_pendingValue != m_value)
+    {
+        std::swap(m_value, m_pendingValue);
+        m_hasPendingValue = false;
+        notifyValueChanged();
+    }
 }
 
 
-void BaseParameter::supply(const Variant& var) const
+void BaseParameter::notifyValueChanged() const
 {
     for (auto* par : getConnectedInputs())
     {
-        par->consume(var);
+        par->m_pendingValue = m_value;
+        par->m_hasPendingValue = true;
     }
 }
 
