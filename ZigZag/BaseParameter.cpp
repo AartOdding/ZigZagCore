@@ -22,26 +22,25 @@ BaseParameter::~BaseParameter()
 void BaseParameter::setParent(Object* parent)
 {
     Object::setParent(parent);
-    ZigZagChild<BaseParameter, Object>::setParent(parent); // no need to cast, already object.
+    ZigZagChild<BaseParameter, Object>::setParent(parent); // no need to cast, already object type.
 }
 
 
-void BaseParameter::processPendingChanges()
+void BaseParameter::process()
 {
-    if (m_hasPendingValue && m_pendingValue != m_value)
+    if (m_hasPendingValue)
     {
-        std::swap(m_value, m_pendingValue);
+        extractNewValue(m_pendingValue);
         m_hasPendingValue = false;
-        notifyValueChanged();
     }
 }
 
 
-void BaseParameter::notifyValueChanged() const
+void BaseParameter::notifyNewValue(const std::any& newValue) const
 {
     for (auto* par : getConnectedInputs())
     {
-        par->m_pendingValue = m_value;
+        par->m_pendingValue = newValue;
         par->m_hasPendingValue = true;
     }
 }

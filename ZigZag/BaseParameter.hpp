@@ -1,9 +1,10 @@
 #pragma once
 
+#include <any>
+
 #include <ZigZag/Object.hpp>
 #include <ZigZag/ParentChildRelationship.hpp>
 #include <ZigZag/InputOutputRelationship.hpp>
-#include <ZigZag/Variant.hpp>
 
 
 namespace ZigZag
@@ -23,19 +24,21 @@ public:
 
     void setParent(Object* parent) override;
 
-
-    virtual void processPendingChanges();
-
-    void notifyValueChanged() const;
+    void process();
 
 protected:
 
-    Variant m_value;
+    void notifyNewValue(const std::any& newValue) const;
+
+    virtual void extractNewValue(const std::any& newValue) = 0;
+
 
 private:
 
-    Variant m_pendingValue;
+    std::any m_pendingValue;
+
     bool m_hasPendingValue = false;
+
 
 };
 

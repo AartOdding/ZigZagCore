@@ -66,6 +66,9 @@ public:
     bool isParentOf(const Object* potentialChild, bool directOnly) const;
 
     const std::vector<BaseParameter*>& getChildParameters() const;
+    
+
+    virtual const char* typeName() const { return "Object"; }
 
 private:
 
