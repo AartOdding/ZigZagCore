@@ -13,8 +13,4 @@ add_library(ZigZagCore STATIC
     ZigZag/Object.cpp
 )
 
-add_subdirectory(external/Variant)
-
-target_link_libraries(ZigZagCore ZigZagVariant)
-
 target_include_directories(ZigZagCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
