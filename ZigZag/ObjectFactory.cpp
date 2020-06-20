@@ -14,21 +14,26 @@ ObjectFactory* ObjectFactory::instance()
 }
 
 
-
 void ObjectFactory::registerType(std::string_view typeName, std::function<Object*()>&& func)
 {
-    std::string name{ typeName };
+    m_objectNames.emplace_back(typeName);
+    m_objectNamePtrs.clear();
+
+    for (const auto& name : m_objectNames)
+    {
+        m_objectNamePtrs.emplace_back(name.c_str());
+    }
+
     if (!func)
     {
         throw std::runtime_error("Cannot register type without constructor function.");
     }
-    if (m_functions.find(name) != m_functions.end())
+    if (m_functions.find(m_objectNames.back()) != m_functions.end())
     {
         throw std::runtime_error("Type name has already been registered.");
     }
-    m_functions[name] = std::move(func);
+    m_functions[m_objectNames.back()] = std::move(func);
 }
-
 
 
 Object* ObjectFactory::create(const std::string& typeName) const
@@ -39,4 +44,10 @@ Object* ObjectFactory::create(const std::string& typeName) const
         throw std::runtime_error("Cannot create object for unknown type name.");
     }
     return it->second();
+}
+
+
+const std::vector<std::string>& ObjectFactory::getObjectTypeNames() const
+{
+    return m_objectNames;
 }

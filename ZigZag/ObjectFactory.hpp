@@ -24,14 +24,19 @@ public:
 
     void registerType(std::string_view typeName, std::function<Object*()>&& func);
 
-    // ownership is given to caller.
+    // Ownership is given to caller.
     Object* create(const std::string& typeName) const;
+
+    const std::vector<std::string>& getObjectTypeNames() const;
+
 
 private:
 
     ObjectFactory() = default;
 
     std::unordered_map<std::string, std::function<Object*()>> m_functions;
+    std::vector<std::string> m_objectNames;
+    std::vector<const char*> m_objectNamePtrs;
 
 };
 
