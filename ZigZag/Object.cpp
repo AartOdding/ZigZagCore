@@ -214,26 +214,21 @@ void Object::setName(std::string_view name)
 
 void Object::setParent(Object* parent)
 {
+    if (parent && parent->isChildOf(this, false))
+    {
+        throw std::runtime_error("Bad reparenting operation: Loops not allowed!");
+    }
+
     if (m_parent != parent)
     {
-        if (!parent)
-        {
-            removeFromParent();
-        }
-        else if (parent->isChildOf(this, false))
-        {
-            throw std::runtime_error("Bad reparenting operation: Loops not allowed!");
-        }
-        else
-        {
-            removeFromParent();
+        removeFromParent();
 
-            if (m_parent)
-            {
-                m_parent->m_children.push_back(this);
-            }
-            updateFullName();
+        if (parent)
+        {
+            m_parent = parent;
+            m_parent->m_children.push_back(this);
         }
+        updateFullName();
     }
 }
 
