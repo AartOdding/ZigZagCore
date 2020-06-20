@@ -3,6 +3,10 @@
 #include <ZigZag/BaseParameter.hpp>
 
 
+namespace ZigZag
+{
+
+
 template<typename T, const char* NAME>
 class TParameter : public ZigZag::BaseParameter
 {
@@ -61,3 +65,6 @@ private:
     T m_value;
 
 };
+
+
+}
