@@ -163,48 +163,12 @@ Object::~Object()
     for (Object* child : m_children)
     {
         child->m_parent = nullptr;
-        child->updateFullName();
-    }
-}
 
-
-void Object::setName(std::string_view name)
-{
-    std::string cleanedName = cleanName(name);
-
-    if (m_name != cleanedName)
-    {
-        // Safe bacause, if parent is null, the second part will not be evaluated.
-        // If there is no parent or no sibling has the desired name, take it.
-        if (!m_parent || !m_parent->hasChildWithName(cleanedName))
+        if (child->m_deleteByParent)
         {
-            m_name = cleanedName;
+            delete child;
         }
         else
-        {
-            auto [isNumber, number, nameSize] = getTrailingNumber(cleanedName);
-            do
-            {
-                if (isNumber)
-                {
-                    cleanedName.resize(nameSize);
-                    cleanedName.append(std::to_string(++number));
-                }
-                else
-                {
-                    number = 1;
-                    isNumber = true;
-
-                    cleanedName.resize(nameSize);
-                    cleanedName.append(" ");
-                    cleanedName.append(std::to_string(number));
-                }
-            }
-            while (m_parent->hasChildWithName(cleanedName));
-
-            m_name = cleanedName;
-        }
-        for (Object* child : m_children)
         {
             child->updateFullName();
         }
@@ -212,8 +176,18 @@ void Object::setName(std::string_view name)
 }
 
 
+void Object::setName(std::string_view name)
+{
+    setNameImplementation(name, false);
+}
+
+
 void Object::setParent(Object* parent)
 {
+    if (m_deleteByParent && !parent)
+    {
+        throw std::runtime_error("Setting parent to null is not allowed while deleteByParent is true.");
+    }
     if (parent && parent->isChildOf(this, false))
     {
         throw std::runtime_error("Bad reparenting operation: Loops not allowed!");
@@ -226,6 +200,7 @@ void Object::setParent(Object* parent)
         if (parent)
         {
             m_parent = parent;
+            setNameImplementation(m_name, true);
             m_parent->m_children.push_back(this);
         }
         updateFullName();
@@ -251,6 +226,22 @@ Object* Object::getParent() const
 }
 
 
+void Object::setDeleteByParent(bool deleteByParent)
+{
+    if (deleteByParent && !m_parent)
+    {
+        throw std::runtime_error("Setting deleteByParent to true without having a parent is illegal.");
+    }
+    m_deleteByParent = deleteByParent;
+}
+
+
+bool Object::getDeleteByParent() const
+{
+    return m_deleteByParent;
+}
+
+
 bool Object::hasChildren() const
 {
     return !m_children.empty();
@@ -261,7 +252,7 @@ bool Object::hasChildWithName(std::string_view childName) const
 {
     for (Object* child : m_children)
     {
-        if (child && child->m_name == childName)
+        if (child->m_name == childName)
         {
             return true;
         }
@@ -280,7 +271,7 @@ Object* Object::getChildWithName(std::string_view childName) const
 {
     for (Object* child : m_children)
     {
-        if (child && child->m_name == childName)
+        if (child->m_name == childName)
         {
             return child;
         }
@@ -313,7 +304,7 @@ const Object* Object::getRootObject() const
 }
 
 
-Object* Object::getObjectWithFullName(const std::string& objectFullName)
+Object* Object::findObjectWithFullName(const std::string& objectFullName)
 {
     /*
     Object* root = getRootObject();
@@ -339,7 +330,7 @@ Object* Object::getObjectWithFullName(const std::string& objectFullName)
 }
 
 
-const Object* Object::getObjectWithFullName(const std::string& objectFullName) const
+const Object* Object::findObjectWithFullName(const std::string& objectFullName) const
 {
     return nullptr;
 }
@@ -380,6 +371,49 @@ const std::vector<BaseParameter*>& Object::getChildParameters() const
 }
 
 
+void Object::setNameImplementation(std::string_view name, bool reparented)
+{
+    std::string cleanedName = cleanName(name);
+
+    if (m_name != cleanedName || reparented)
+    {
+        // Safe bacause, if parent is null, the second part will not be evaluated.
+        // If there is no parent or no sibling has the desired name, take it.
+        if (!m_parent || !m_parent->hasChildWithName(cleanedName))
+        {
+            m_name = cleanedName;
+        }
+        else
+        {
+            auto [isNumber, number, nameSize] = getTrailingNumber(cleanedName);
+            do
+            {
+                if (isNumber)
+                {
+                    cleanedName.resize(nameSize);
+                    cleanedName.append(std::to_string(++number));
+                }
+                else
+                {
+                    number = 1;
+                    isNumber = true;
+
+                    cleanedName.resize(nameSize);
+                    cleanedName.append(" ");
+                    cleanedName.append(std::to_string(number));
+                }
+            } while (m_parent->hasChildWithName(cleanedName));
+
+            m_name = cleanedName;
+        }
+        for (Object* child : m_children)
+        {
+            child->updateFullName();
+        }
+    }
+}
+
+
 void Object::updateFullName()
 {
     if (m_parent)
@@ -399,6 +433,7 @@ void Object::updateFullName()
         child->updateFullName();
     }
 }
+
 
 bool Object::removeFromParent()
 {

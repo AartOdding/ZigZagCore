@@ -27,6 +27,8 @@ public:
      */
     void setName(std::string_view name);
 
+    const std::string& getName() const;
+
     /*
      * When an object is reparented, and there is a naming conflict with one of the new siblings 
      * the object that is being reparented is the one that will have its name changed to keep all 
@@ -35,12 +37,13 @@ public:
      */
     virtual void setParent(Object* parent);
 
-    
-    const std::string& getName() const;
-    const std::string& getFullName() const;
-
-    
     Object* getParent() const;
+
+
+    void setDeleteByParent(bool deleteByParent);
+    bool getDeleteByParent() const;
+    
+
 
     bool hasChildren() const;
     bool hasChildWithName(std::string_view childName) const;
@@ -49,8 +52,8 @@ public:
     Object* getChildWithName(std::string_view childName) const;
 
     /*
-     * Returns the root object of this tree of ZigZag Objects. If this is the root itself, then 
-     * this is returned.
+     * Returns the root object of tree of Objects. If this is the root itself (this has no parent),
+     * then this is returned.
      */
     Object* getRootObject();
     const Object* getRootObject() const;
@@ -59,18 +62,21 @@ public:
      * Will search in the tree of objects that this object is part of for an object that matches 
      * the full name.
      */
-    Object* getObjectWithFullName(const std::string& objectFullName);
-    const Object* getObjectWithFullName(const std::string& objectFullName) const;
+    Object* findObjectWithFullName(const std::string& objectFullName);
+    const Object* findObjectWithFullName(const std::string& objectFullName) const;
 
     bool isChildOf(const Object* potentialParent, bool directOnly) const;
     bool isParentOf(const Object* potentialChild, bool directOnly) const;
 
+    const std::string& getFullName() const;
+
     const std::vector<BaseParameter*>& getChildParameters() const;
     
-
     virtual const char* typeName() const { return "Object"; }
 
 private:
+
+    void setNameImplementation(std::string_view name, bool reparented);
 
     void updateFullName();
     bool removeFromParent();
@@ -80,6 +86,8 @@ private:
 
     Object* m_parent;
     std::vector<Object*> m_children;
+
+    bool m_deleteByParent = false;
 
 };
 

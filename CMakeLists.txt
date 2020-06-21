@@ -12,6 +12,7 @@ add_library(ZigZagCore STATIC
     ZigZag/BaseParameter.cpp
     ZigZag/Object.cpp
     ZigZag/ObjectFactory.cpp
+    ZigZag/ObjectSelection.cpp
 )
 
 target_include_directories(ZigZagCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
