@@ -29,6 +29,8 @@ public:
     const std::vector<BaseOperator*>& getChildOperators() const;
     const std::vector<BaseDataSource*>& getDataSources() const;
     const std::vector<BaseDataInput*>& getDataInputs() const;
+    
+    virtual const char* typeName() const { return "BaseOperator"; }
 
 private:
 
