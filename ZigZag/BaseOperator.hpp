@@ -30,7 +30,7 @@ public:
     const std::vector<BaseDataSource*>& getDataSources() const;
     const std::vector<BaseDataInput*>& getDataInputs() const;
     
-    virtual const char* typeName() const { return "BaseOperator"; }
+    virtual const char* typeName() const override { return "BaseOperator"; }
 
 private:
 
