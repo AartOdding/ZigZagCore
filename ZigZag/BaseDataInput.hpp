@@ -26,6 +26,8 @@ public:
 
     //virtual bool canConnectTo(const BaseDataSource* dataSource) const = 0;
 
+    virtual const char* typeName() const override { return "BaseDataInput"; }
+
 };
 
 }

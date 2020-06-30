@@ -17,7 +17,7 @@ class Object : public ZigZagParent<Object, BaseParameter>
 {
 public:
 
-    Object(Object* parent = nullptr, std::string_view name = std::string());
+    Object(Object* parent = nullptr, std::string_view name = std::string_view());
 
     virtual ~Object();
 

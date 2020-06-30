@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <tuple>
 #include <stdexcept>
 
@@ -6,10 +7,10 @@
 #include <ZigZag/BaseParameter.hpp>
 
 
-static std::string specialAllowedCharacters = "_-*";
+static constexpr std::array specialAllowedCharacters{ '_', '-', '*' };
 
 
-static bool isAlphaNumeric(char character)
+static constexpr bool isAlphaNumeric(char character)
 {
     return (character >= '0' && character <= '9')
         || (character >= 'A' && character <= 'Z')
@@ -17,7 +18,7 @@ static bool isAlphaNumeric(char character)
 }
 
 
-static int getNumericValue(char character)
+static constexpr int getNumericValue(char character)
 {
     if (character < '0' || character > '9')
     {
@@ -30,7 +31,7 @@ static int getNumericValue(char character)
 }
 
 
-static bool isSpecialAllowedCharacter(char character)
+static constexpr bool isSpecialAllowedCharacter(char character)
 {
     for (char allowedCharacter : specialAllowedCharacters)
     {
@@ -43,18 +44,25 @@ static bool isSpecialAllowedCharacter(char character)
 }
 
 
-static bool isCharacterAllowed(char character)
+static constexpr bool isCharacterAllowed(char character)
 {
     return isAlphaNumeric(character) || isSpecialAllowedCharacter(character);
 }
 
 
+/*
+ * Will clean given name such that it only contains the allowed characters, doesnt start
+ * or end with a space, and doesnt have any consecutive spaces.
+ * Can not be made constexpr because of the string allocation.
+ */
 static std::string cleanName(std::string_view name)
 {
+    // Better reserve a bit more space so no reallocation is necessary if the name ends up
+    // already being taken.
     std::string cleaned;
-    cleaned.reserve(name.size() + 1);
+    cleaned.reserve(name.size() + 3);
 
-    // Start on true, so that if the string starts with spaces, they will be ignored.
+    // Start on true, so that if the string starts with spaces, they will be taken out.
     bool previousCharWasSpace = true;
 
     for (char character : name)
@@ -66,6 +74,10 @@ static std::string cleanName(std::string_view name)
                 cleaned.push_back(' ');
                 previousCharWasSpace = true;
             }
+            // If previous character was also a space we do nothing, and it will thus be
+            // left out so we can never get more than two spaces in a row. in this case
+            // previousCharWasSpace will simply remain true, until a none space character
+            // is added, so that even more spaces will also be left out.
         }
         else if (isCharacterAllowed(character))
         {
@@ -78,8 +90,9 @@ static std::string cleanName(std::string_view name)
             previousCharWasSpace = false;
         }
     }
-    if (!cleaned.empty() && cleaned.back() == ' ')
+    if (!cleaned.empty() && previousCharWasSpace)
     {
+        // If the cleaned string ends on a space we also remove it. 
         cleaned.pop_back();
     }
     if (cleaned.empty())
@@ -91,10 +104,16 @@ static std::string cleanName(std::string_view name)
 
 
 /*
+ * This algorithm is specifically made to find numbers in Object names, where we assume
+ * that the number is always separated from the name with a space. This results in the 
+ * string "name123" not passing as a valid number while "name 123" is considered valid,
+ * strings that only contain a number such as "123" are also considered valid, but all 
+ * negative numbers are not considered valid.
+ * 
  * Returns:
  * bool: Whether a number was found or not.
  * int:  The value of the number.
- * int:  The amount of characters in the non digit part of the string.
+ * int:  The amount of characters in the non digit part of the string, excluding the space.
  */
 static std::tuple<bool, int, int> getTrailingNumber(const std::string& string)
 {
@@ -116,8 +135,18 @@ static std::tuple<bool, int, int> getTrailingNumber(const std::string& string)
         }
         else
         {
-            if (string[i] != ' ')
+            // If the string only contains numbers "123" this part of the code will never
+            // be reached, and thus isNumberValid will remain valid if the if part of this
+            // if-else statement has been executed.
+            if (string[i] == ' ')
             {
+                // if there was a space before the number we increment numDigits so that the
+                // size returned of the non number part of the name will be correct.
+                ++numDigits;
+            }
+            else
+            {
+                // If there was no space then the number is considered invalid.
                 numDigits = 0;
                 isNumberValid = false;
             }
@@ -130,29 +159,31 @@ static std::tuple<bool, int, int> getTrailingNumber(const std::string& string)
 
 //---------------------------------------------------------------------------------
 
+#include <iostream>
+
 namespace ZigZag
 {
-
 
 Object::Object(Object* parent, std::string_view name)
     : m_parent(parent)
 {
     /*
      * Don't need to worry about creating parent loops here, because this object cannot
-     * have any children yet, and thus it is also impossible for the parent to be a child
-     * of this. Thus there cannot be a loop.
+     * have any children yet, and thus it is impossible for the parent to be a child
+     * of this. Thus there cannot be a loop in the hierarchy, which would cause an exception
+     * to be thrown. This is something that has to be checked for in the setParent() function.
      */
-
-    // Set name before 'this' is added as a child in the parent. m_parent has already been set at this point!
-    setName(name);
-
     if (m_parent)
     {
         m_parent->m_children.push_back(this);
     }
-
-    // In this case initializes m_fullName
+    setName(name);
     updateFullName();
+
+    auto [x1, y1, z1] = getTrailingNumber("hello 123");
+    auto [x2, y2, z2] = getTrailingNumber("hello123");
+    std::cout << x1 << "\t" << y1 << "\t" << z1 << std::endl;
+    std::cout << x2 << "\t" << y2 << "\t" << z2 << std::endl;
 }
 
 
@@ -192,7 +223,6 @@ void Object::setParent(Object* parent)
     {
         throw std::runtime_error("Bad reparenting operation: Loops not allowed!");
     }
-
     if (m_parent != parent)
     {
         removeFromParent();
@@ -200,10 +230,13 @@ void Object::setParent(Object* parent)
         if (parent)
         {
             m_parent = parent;
-            setNameImplementation(m_name, true);
             m_parent->m_children.push_back(this);
+            setNameImplementation(m_name, true);
         }
-        updateFullName();
+        else
+        {
+            updateFullName();
+        }
     }
 }
 
@@ -375,22 +408,32 @@ void Object::setNameImplementation(std::string_view name, bool reparented)
 {
     std::string cleanedName = cleanName(name);
 
+    // Usually it is safe to say that if the name has not changed that we do not 
+    // need to update it, however if the object has just been reparented, there
+    // might have been conflicts created. Thus we have the || reparented.
     if (m_name != cleanedName || reparented)
     {
+        // We start off by clearing the name, so that we can check if the parent has
+        // other children with the name we want to have, without interfering with our
+        // own name.
+        m_name.clear();
+
         // Safe bacause, if parent is null, the second part will not be evaluated.
-        // If there is no parent or no sibling has the desired name, take it.
+        // If there is no parent or no sibling with the desired name, take it.
         if (!m_parent || !m_parent->hasChildWithName(cleanedName))
         {
-            m_name = cleanedName;
+            std::swap(m_name, cleanedName);
         }
         else
         {
+            // If the name is already taken we start appending numbers to it, until we 
+            // find a free name. 
             auto [isNumber, number, nameSize] = getTrailingNumber(cleanedName);
             do
             {
                 if (isNumber)
                 {
-                    cleanedName.resize(nameSize);
+                    cleanedName.resize(nameSize == 0 ? 0 : nameSize + 1);
                     cleanedName.append(std::to_string(++number));
                 }
                 else
@@ -402,9 +445,10 @@ void Object::setNameImplementation(std::string_view name, bool reparented)
                     cleanedName.append(" ");
                     cleanedName.append(std::to_string(number));
                 }
-            } while (m_parent->hasChildWithName(cleanedName));
+            } 
+            while (m_parent->hasChildWithName(cleanedName));
 
-            m_name = cleanedName;
+            std::swap(m_name, cleanedName);
         }
         for (Object* child : m_children)
         {
@@ -414,19 +458,27 @@ void Object::setNameImplementation(std::string_view name, bool reparented)
 }
 
 
+/* 
+ * Updates the full name of the object, but assumes the name is already valid.
+ * We do not contain this whole function in a big if statement to check whether the full
+ * name actually needs to be updated, because that would be quite costly, and this function
+ * is private, which means we can make sure to only call it when we know the full name 
+ * needs to be updated. 
+ */
 void Object::updateFullName()
 {
     if (m_parent)
     {
-        m_fullName.clear();
         m_fullName.reserve(m_parent->getFullName().size() + m_name.size() + 2);
-        m_fullName.append(m_parent->getFullName());
-        m_fullName.append(".");
+        m_fullName = m_parent->getFullName();
+        m_fullName.append("/");
         m_fullName.append(m_name);
     }
     else
     {
-        m_fullName = m_name;
+        m_fullName.reserve(m_name.size() + 2);
+        m_fullName = "/";
+        m_fullName.append(m_name);
     }
     for (Object* child : m_children)
     {

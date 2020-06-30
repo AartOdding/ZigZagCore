@@ -25,6 +25,8 @@ public:
 
     void setParent(Object* parent) override;
 
+    virtual const char* typeName() const override { return "BaseDataSource"; }
+
 };
 
 }
