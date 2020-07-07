@@ -29,6 +29,8 @@ public:
 
     const std::string& getName() const;
 
+    std::string getClosestPotentialName(std::string_view desiredName) const;
+
     /*
      * When an object is reparented, and there is a naming conflict with one of the new siblings 
      * the object that is being reparented is the one that will have its name changed to keep all 
@@ -75,8 +77,6 @@ public:
     virtual const char* typeName() const { return "Object"; }
 
 private:
-
-    void setNameImplementation(std::string_view name, bool reparented);
 
     void updateFullName();
     bool removeFromParent();

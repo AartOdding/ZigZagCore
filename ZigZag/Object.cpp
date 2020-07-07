@@ -178,12 +178,6 @@ Object::Object(Object* parent, std::string_view name)
         m_parent->m_children.push_back(this);
     }
     setName(name);
-    updateFullName();
-
-    auto [x1, y1, z1] = getTrailingNumber("hello 123");
-    auto [x2, y2, z2] = getTrailingNumber("hello123");
-    std::cout << x1 << "\t" << y1 << "\t" << z1 << std::endl;
-    std::cout << x2 << "\t" << y2 << "\t" << z2 << std::endl;
 }
 
 
@@ -209,7 +203,13 @@ Object::~Object()
 
 void Object::setName(std::string_view name)
 {
-    setNameImplementation(name, false);
+    std::string newName = getClosestPotentialName(name);
+    
+    if (m_name != newName)
+    {
+        m_name.swap(newName);
+        updateFullName();
+    }
 }
 
 
@@ -231,10 +231,16 @@ void Object::setParent(Object* parent)
         {
             m_parent = parent;
             m_parent->m_children.push_back(this);
-            setNameImplementation(m_name, true);
+
+            std::string oldName;
+            m_name.swap(oldName);
+            // m_name is now empty, oldName contains previous name.
+
+            setName(oldName);
         }
         else
         {
+            m_parent = nullptr;
             updateFullName();
         }
     }
@@ -404,57 +410,41 @@ const std::vector<BaseParameter*>& Object::getChildParameters() const
 }
 
 
-void Object::setNameImplementation(std::string_view name, bool reparented)
+std::string Object::getClosestPotentialName(std::string_view desiredName) const
 {
-    std::string cleanedName = cleanName(name);
+    std::string cleanedName = cleanName(desiredName);
 
-    // Usually it is safe to say that if the name has not changed that we do not 
-    // need to update it, however if the object has just been reparented, there
-    // might have been conflicts created. Thus we have the || reparented.
-    if (m_name != cleanedName || reparented)
+    if (m_name == cleanedName || !m_parent)
     {
-        // We start off by clearing the name, so that we can check if the parent has
-        // other children with the name we want to have, without interfering with our
-        // own name.
-        m_name.clear();
-
-        // Safe bacause, if parent is null, the second part will not be evaluated.
-        // If there is no parent or no sibling with the desired name, take it.
-        if (!m_parent || !m_parent->hasChildWithName(cleanedName))
-        {
-            std::swap(m_name, cleanedName);
-        }
-        else
-        {
-            // If the name is already taken we start appending numbers to it, until we 
-            // find a free name. 
-            auto [isNumber, number, nameSize] = getTrailingNumber(cleanedName);
-            do
-            {
-                if (isNumber)
-                {
-                    cleanedName.resize(nameSize == 0 ? 0 : nameSize + 1);
-                    cleanedName.append(std::to_string(++number));
-                }
-                else
-                {
-                    number = 1;
-                    isNumber = true;
-
-                    cleanedName.resize(nameSize);
-                    cleanedName.append(" ");
-                    cleanedName.append(std::to_string(number));
-                }
-            } 
-            while (m_parent->hasChildWithName(cleanedName));
-
-            std::swap(m_name, cleanedName);
-        }
-        for (Object* child : m_children)
-        {
-            child->updateFullName();
-        }
+        // If the object already has the given name, it is returned qithout modification 
+        // because this function should only be used to find a suitable name for this object.
+        // If there is no parent the name is also valid because there are no competing siblings. 
     }
+    else if (m_parent->hasChildWithName(cleanedName))
+    {
+        // If the name is already taken we start appending numbers to it, until we 
+        // find a free name. 
+        auto [isNumber, number, nameSize] = getTrailingNumber(cleanedName);
+        do
+        {
+            if (isNumber)
+            {
+                cleanedName.resize(nameSize == 0 ? 0 : nameSize + 1);
+                cleanedName.append(std::to_string(++number));
+            }
+            else
+            {
+                number = 1;
+                isNumber = true;
+
+                cleanedName.resize(nameSize);
+                cleanedName.append(" ");
+                cleanedName.append(std::to_string(number));
+            }
+        } while (m_parent->hasChildWithName(cleanedName));
+    }
+
+    return cleanedName;
 }
 
 
