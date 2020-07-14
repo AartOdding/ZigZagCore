@@ -36,7 +36,7 @@ public:
     bool isConnected();
     bool isConnectedTo(const OUTPUT_TYPE* output) const;
 
-    const OUTPUT_TYPE* getConnectedOutput() const;
+    OUTPUT_TYPE* getConnectedOutput() const;
 
 private:
 
@@ -142,7 +142,7 @@ bool ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::isConnectedTo(const OUTPUT_TYPE* outp
 
 
 template<typename INPUT_TYPE, typename OUTPUT_TYPE>
-const OUTPUT_TYPE* ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::getConnectedOutput() const
+OUTPUT_TYPE* ZigZagInput<INPUT_TYPE, OUTPUT_TYPE>::getConnectedOutput() const
 {
     return m_connectedOutput;
 }
