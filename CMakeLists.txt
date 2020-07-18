@@ -12,6 +12,7 @@ SET(SOURCES
     ZigZag/Object.cpp
     ZigZag/ObjectFactory.cpp
     ZigZag/ObjectSelection.cpp
+    ZigZag/RenderOrder.cpp
 )
 
 SET(HEADERS
@@ -24,6 +25,7 @@ SET(HEADERS
     ZigZag/ObjectFactory.hpp
     ZigZag/ObjectSelection.hpp
     ZigZag/ParentChildRelationship.hpp
+    ZigZag/RenderOrder.hpp
     ZigZag/TParameter.hpp
 )
 
