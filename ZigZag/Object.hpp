@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cassert>
+#include <cstdint>
+#include <functional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -9,6 +12,8 @@
 
 namespace ZigZag
 {
+
+using CallbackId = std::uint64_t;
 
 class BaseParameter;
 
@@ -73,19 +78,30 @@ public:
     const std::string& getFullName() const;
 
     const std::vector<BaseParameter*>& getChildParameters() const;
+
+    CallbackId registerChildrenCallback(std::function<void(Object* child, bool added)> callback);
+    void deregisterChildrenCallback(CallbackId callackId);
     
     virtual const char* typeName() const { return "Object"; }
 
 private:
 
+    struct Callback
+    {
+        CallbackId id;
+        std::function<void(Object* child, bool added)> function;
+    };
+
     void updateFullName();
     bool removeFromParent();
+    void executeChildrenCallback(Object* child, bool added);
 
     std::string m_name;
     std::string m_fullName;
 
     Object* m_parent;
     std::vector<Object*> m_children;
+    std::vector<Callback> m_childrenCallbacks;
 
     bool m_deleteByParent = false;
 

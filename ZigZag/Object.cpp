@@ -8,7 +8,7 @@
 
 
 static constexpr std::array specialAllowedCharacters{ '_', '-', '*' };
-
+static ZigZag::CallbackId nextCallbackId = 4567;
 
 static constexpr bool isAlphaNumeric(char character)
 {
@@ -159,7 +159,6 @@ static std::tuple<bool, int, int> getTrailingNumber(const std::string& string)
 
 //---------------------------------------------------------------------------------
 
-#include <iostream>
 
 namespace ZigZag
 {
@@ -167,6 +166,7 @@ namespace ZigZag
 Object::Object(Object* parent, std::string_view name)
     : m_parent(parent)
 {
+    setName(name);
     /*
      * Don't need to worry about creating parent loops here, because this object cannot
      * have any children yet, and thus it is impossible for the parent to be a child
@@ -176,8 +176,8 @@ Object::Object(Object* parent, std::string_view name)
     if (m_parent)
     {
         m_parent->m_children.push_back(this);
+        m_parent->executeChildrenCallback(this, true);
     }
-    setName(name);
 }
 
 
@@ -237,6 +237,7 @@ void Object::setParent(Object* parent)
             // m_name is now empty, oldName contains previous name.
 
             setName(oldName);
+            m_parent->executeChildrenCallback(this, true);
         }
         else
         {
@@ -410,6 +411,27 @@ const std::vector<BaseParameter*>& Object::getChildParameters() const
 }
 
 
+CallbackId Object::registerChildrenCallback(std::function<void(Object* child, bool added)> callback)
+{
+    m_childrenCallbacks.push_back({ nextCallbackId, callback });
+    return nextCallbackId++;
+}
+
+
+void Object::deregisterChildrenCallback(CallbackId callackId)
+{
+    for (auto it = m_childrenCallbacks.begin(); it != m_childrenCallbacks.end(); ++it)
+    {
+        if (it->id == callackId)
+        {
+            m_childrenCallbacks.erase(it);
+            return;
+        }
+    }
+    assert(false);
+}
+
+
 std::string Object::getClosestPotentialName(std::string_view desiredName) const
 {
     std::string cleanedName = cleanName(desiredName);
@@ -481,15 +503,29 @@ bool Object::removeFromParent()
 {
     if (m_parent)
     {
-        auto pos = std::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+        auto parent = m_parent;
+        m_parent = nullptr;
 
-        if (pos != m_parent->m_children.end())
+        auto pos = std::find(parent->m_children.begin(), parent->m_children.end(), this);
+
+        assert(pos != parent->m_children.end());
+        if (pos != parent->m_children.end())
         {
-            m_parent->m_children.erase(pos);
+            parent->m_children.erase(pos);
+            parent->executeChildrenCallback(this, false);
             return true;
         }
     }
     return false;
+}
+
+
+void Object::executeChildrenCallback(Object* child, bool added)
+{
+    for (const auto& cb : m_childrenCallbacks)
+    {
+        cb.function(child, added);
+    }
 }
 
 }
