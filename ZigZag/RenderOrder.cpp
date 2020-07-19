@@ -66,7 +66,7 @@ RenderOrder::RenderOrder(BaseOperator* scope)
 	assert(m_scope);
 	if (m_scope)
 	{
-		m_callbackId = m_scope->registerChildrenCallback([this](Object*, bool) { construct(); });
+		//m_callbackId = m_scope->registerChildrenCallback([this](Object*, bool) { construct(); });
 		construct();
 	}
 }
@@ -76,7 +76,7 @@ RenderOrder::~RenderOrder()
 {
 	if (m_scope)
 	{
-		m_scope->deregisterChildrenCallback(m_callbackId);
+		//m_scope->deregisterChildrenCallback(m_callbackId);
 	}
 }
 

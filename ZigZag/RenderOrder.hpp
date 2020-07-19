@@ -26,9 +26,9 @@ public:
 
     const std::vector<std::vector<BaseOperator*>>& order() const;
 
-private:
-
     void construct();
+
+private:
 
     std::vector<BaseOperator*>& getBin(unsigned index);
     void clearBins();
