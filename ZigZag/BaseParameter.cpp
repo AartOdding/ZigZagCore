@@ -7,7 +7,7 @@ namespace ZigZag
 
 BaseParameter::BaseParameter(Object* parent, std::string_view name)
     : Object(parent, name),
-      ZigZagChild<BaseParameter, Object>(parent)
+      Child<BaseParameter, Object>(parent)
 {
     
 }
@@ -16,7 +16,7 @@ BaseParameter::BaseParameter(Object* parent, std::string_view name)
 void BaseParameter::setParent(Object* parent)
 {
     Object::setParent(parent);
-    ZigZagChild<BaseParameter, Object>::setParent(parent); // no need to cast, already object type.
+    Child<BaseParameter, Object>::setParent(parent); // no need to cast, already object type.
 }
 
 

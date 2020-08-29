@@ -408,7 +408,7 @@ bool Object::isParentOf(const Object* potentialChild, bool directOnly) const
 
 const std::vector<BaseParameter*>& Object::getChildParameters() const
 {
-    return ZigZagParent<Object, BaseParameter>::getChildren();
+    return Parent<Object, BaseParameter>::getChildren();
 }
 
 

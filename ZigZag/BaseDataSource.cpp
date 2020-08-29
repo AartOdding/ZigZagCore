@@ -8,7 +8,7 @@ namespace ZigZag
 
 BaseDataSource::BaseDataSource(Object* parent, std::string_view name)
     : Object(parent, name),
-      ZigZagChild<BaseDataSource, BaseOperator>(dynamic_cast<BaseOperator*>(parent))
+      Child<BaseDataSource, BaseOperator>(dynamic_cast<BaseOperator*>(parent))
 {
     
 }
@@ -17,7 +17,7 @@ BaseDataSource::BaseDataSource(Object* parent, std::string_view name)
 void BaseDataSource::setParent(Object* parent)
 {
     Object::setParent(parent);
-    ZigZagChild<BaseDataSource, BaseOperator>::setParent(dynamic_cast<BaseOperator*>(parent));
+    Child<BaseDataSource, BaseOperator>::setParent(dynamic_cast<BaseOperator*>(parent));
 }
 
 }

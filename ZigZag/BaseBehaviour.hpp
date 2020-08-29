@@ -1,14 +1,14 @@
 #pragma once
 
 #include <ZigZag/Object.hpp>
-#include <ZigZag/ParentChildRelationship.hpp>
+#include <ZigZag/detail/ParentChild.hpp>
 
 
 namespace ZigZag
 {
 
 class BaseBehaviour : public Object,
-                      public ZigZagChild<BaseBehaviour, Object>
+                      public detail::Child<BaseBehaviour, Object>
 {
 public:
 

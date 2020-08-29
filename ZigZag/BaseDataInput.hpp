@@ -1,8 +1,8 @@
 #pragma once
 
 #include <ZigZag/Object.hpp>
-#include <ZigZag/ParentChildRelationship.hpp>
-#include <ZigZag/InputOutputRelationship.hpp>
+#include <ZigZag/detail/ParentChild.hpp>
+#include <ZigZag/detail/InputOutput.hpp>
 
 
 namespace ZigZag
@@ -13,8 +13,8 @@ class BaseDataSource;
 
 
 class BaseDataInput : public Object,
-                      public ZigZagChild<BaseDataInput, BaseOperator>,
-                      public ZigZagInput<BaseDataInput, BaseDataSource>
+                      public detail::Child<BaseDataInput, BaseOperator>,
+                      public detail::Input<BaseDataInput, BaseDataSource>
 {
 public:
 

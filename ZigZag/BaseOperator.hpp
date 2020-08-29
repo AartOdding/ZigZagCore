@@ -1,19 +1,19 @@
 #pragma once
 
 #include <ZigZag/Object.hpp>
-#include <ZigZag/ParentChildRelationship.hpp>
 #include <ZigZag/BaseDataSource.hpp>
 #include <ZigZag/BaseDataInput.hpp>
+#include <ZigZag/detail/ParentChild.hpp>
 
 
 namespace ZigZag
 {
 
 class BaseOperator : public Object,
-                     public ZigZagChild<BaseOperator, BaseOperator>,
-                     public ZigZagParent<BaseOperator, BaseOperator>,
-                     public ZigZagParent<BaseOperator, BaseDataSource>,
-                     public ZigZagParent<BaseOperator, BaseDataInput>
+                     public detail::Child<BaseOperator, BaseOperator>,
+                     public detail::Parent<BaseOperator, BaseOperator>,
+                     public detail::Parent<BaseOperator, BaseDataSource>,
+                     public detail::Parent<BaseOperator, BaseDataInput>
 {
 public:
 

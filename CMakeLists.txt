@@ -22,13 +22,13 @@ SET(HEADERS
     ZigZag/BaseDataSource.hpp
     ZigZag/BaseOperator.hpp
     ZigZag/BaseParameter.hpp
-    ZigZag/InputOutputRelationship.hpp
     ZigZag/Object.hpp
     ZigZag/ObjectFactory.hpp
     ZigZag/ObjectSelection.hpp
-    ZigZag/ParentChildRelationship.hpp
     ZigZag/RenderOrder.hpp
     ZigZag/TParameter.hpp
+    ZigZag/detail/InputOutputRelationship.hpp
+    ZigZag/detail/ParentChildRelationship.hpp
 )
 
 add_library(ZigZagCore STATIC ${SOURCES} ${HEADERS})

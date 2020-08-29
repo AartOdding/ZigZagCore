@@ -7,7 +7,7 @@ namespace ZigZag
 
 BaseOperator::BaseOperator(Object* parent, std::string_view name)
     : Object(parent, name),
-      ZigZagChild<BaseOperator, BaseOperator>(dynamic_cast<BaseOperator*>(parent))
+      Child<BaseOperator, BaseOperator>(dynamic_cast<BaseOperator*>(parent))
 {
 
 }
@@ -16,25 +16,25 @@ BaseOperator::BaseOperator(Object* parent, std::string_view name)
 void BaseOperator::setParent(Object* parent)
 {
     Object::setParent(parent);
-    ZigZagChild<BaseOperator, BaseOperator>::setParent(dynamic_cast<BaseOperator*>(parent));
+    Child<BaseOperator, BaseOperator>::setParent(dynamic_cast<BaseOperator*>(parent));
 }
 
 
 const std::vector<BaseOperator*>& BaseOperator::getChildOperators() const
 {
-    return ZigZagParent<BaseOperator, BaseOperator>::getChildren();
+    return Parent<BaseOperator, BaseOperator>::getChildren();
 }
 
 
 const std::vector<BaseDataSource*>& BaseOperator::getDataSources() const
 {
-    return ZigZagParent<BaseOperator, BaseDataSource>::getChildren();
+    return Parent<BaseOperator, BaseDataSource>::getChildren();
 }
 
 
 const std::vector<BaseDataInput*>& BaseOperator::getDataInputs() const
 {
-    return ZigZagParent<BaseOperator, BaseDataInput>::getChildren();
+    return Parent<BaseOperator, BaseDataInput>::getChildren();
 }
 
 }

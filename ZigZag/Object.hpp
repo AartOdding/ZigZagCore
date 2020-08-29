@@ -7,7 +7,7 @@
 #include <string_view>
 #include <vector>
 
-#include <ZigZag/ParentChildRelationship.hpp>
+#include <ZigZag/detail/ParentChild.hpp>
 
 
 namespace ZigZag
@@ -19,8 +19,8 @@ class BaseBehaviour;
 class BaseParameter;
 
 
-class Object : public ZigZagParent<Object, BaseBehaviour>,
-               public ZigZagParent<Object, BaseParameter>
+class Object : public detail::Parent<Object, BaseBehaviour>,
+               public detail::Parent<Object, BaseParameter>
 {
 public:
 

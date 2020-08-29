@@ -3,8 +3,8 @@
 #include <any>
 
 #include <ZigZag/Object.hpp>
-#include <ZigZag/ParentChildRelationship.hpp>
-#include <ZigZag/InputOutputRelationship.hpp>
+#include <ZigZag/detail/ParentChild.hpp>
+#include <ZigZag/detail/InputOutput.hpp>
 
 
 namespace ZigZag
@@ -12,9 +12,9 @@ namespace ZigZag
 
 
 class BaseParameter : public Object,
-                      public ZigZagChild<BaseParameter, Object>,
-                      public ZigZagInput<BaseParameter, BaseParameter>,
-                      public ZigZagOutput<BaseParameter, BaseParameter>
+                      public detail::Child<BaseParameter, Object>,
+                      public detail::Input<BaseParameter, BaseParameter>,
+                      public detail::Output<BaseParameter, BaseParameter>
 {
 public:
 
