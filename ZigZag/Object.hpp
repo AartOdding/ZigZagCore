@@ -15,10 +15,12 @@ namespace ZigZag
 
 using CallbackId = std::uint64_t;
 
+class BaseBehaviour;
 class BaseParameter;
 
 
-class Object : public ZigZagParent<Object, BaseParameter>
+class Object : public ZigZagParent<Object, BaseBehaviour>,
+               public ZigZagParent<Object, BaseParameter>
 {
 public:
 

@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include <ZigZag/Object.hpp>
+#include <ZigZag/BaseBehaviour.hpp>
 #include <ZigZag/BaseParameter.hpp>
 
 

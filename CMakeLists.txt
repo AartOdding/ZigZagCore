@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(ZigZagCore VERSION 0.1.0)
 
 SET(SOURCES
+    ZigZag/BaseBehaviour.cpp
     ZigZag/BaseDataInput.cpp
     ZigZag/BaseDataSource.cpp
     ZigZag/BaseOperator.cpp
@@ -16,6 +17,7 @@ SET(SOURCES
 )
 
 SET(HEADERS
+    ZigZag/BaseBehaviour.hpp
     ZigZag/BaseDataInput.hpp
     ZigZag/BaseDataSource.hpp
     ZigZag/BaseOperator.hpp
