@@ -14,12 +14,6 @@ BaseDataSource::BaseDataSource(Object* parent, std::string_view name)
 }
 
 
-BaseDataSource::~BaseDataSource()
-{
-
-}
-
-
 void BaseDataSource::setParent(Object* parent)
 {
     Object::setParent(parent);

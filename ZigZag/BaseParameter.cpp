@@ -13,12 +13,6 @@ BaseParameter::BaseParameter(Object* parent, std::string_view name)
 }
 
 
-BaseParameter::~BaseParameter()
-{
-
-}
-
-
 void BaseParameter::setParent(Object* parent)
 {
     Object::setParent(parent);

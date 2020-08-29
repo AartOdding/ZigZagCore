@@ -17,7 +17,9 @@ class BaseOperator : public Object,
 {
 public:
 
-    BaseOperator(Object* parent = nullptr, std::string_view name = std::string());
+    BaseOperator(Object* parent = nullptr, std::string_view name = std::string_view());
+
+    virtual ~BaseOperator() = default;
 
     //virtual void execute() = 0;
 

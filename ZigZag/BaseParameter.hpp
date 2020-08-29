@@ -18,11 +18,13 @@ class BaseParameter : public Object,
 {
 public:
 
-    BaseParameter(Object* parent = nullptr, std::string_view name = std::string());
+    BaseParameter(Object* parent = nullptr, std::string_view name = std::string_view());
 
-    virtual ~BaseParameter();
+    virtual ~BaseParameter() = default;
 
     void setParent(Object* parent) override;
+
+    virtual const char* typeName() const override { return "BaseParameter"; }
 
     void process();
 

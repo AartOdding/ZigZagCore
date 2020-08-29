@@ -19,9 +19,9 @@ class BaseDataSource : public Object,
 {
 public:
 
-    BaseDataSource(Object* parent = nullptr, std::string_view name = std::string());
+    BaseDataSource(Object* parent = nullptr, std::string_view name = std::string_view());
 
-    ~BaseDataSource();
+    virtual ~BaseDataSource() = default;
 
     void setParent(Object* parent) override;
 

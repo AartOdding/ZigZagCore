@@ -18,9 +18,9 @@ class BaseDataInput : public Object,
 {
 public:
 
-    BaseDataInput(Object* parent = nullptr, std::string_view name = std::string());
+    BaseDataInput(Object* parent = nullptr, std::string_view name = std::string_view());
 
-    virtual ~BaseDataInput();
+    virtual ~BaseDataInput() = default;
 
     void setParent(Object* parent) override;
 

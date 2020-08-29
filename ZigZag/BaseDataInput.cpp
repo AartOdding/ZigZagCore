@@ -13,12 +13,6 @@ BaseDataInput::BaseDataInput(Object* parent, std::string_view name)
 }
 
 
-BaseDataInput::~BaseDataInput()
-{
-
-}
-
-
 void BaseDataInput::setParent(Object* parent)
 {
     Object::setParent(parent);
