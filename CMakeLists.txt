@@ -27,8 +27,8 @@ SET(HEADERS
     ZigZag/ObjectSelection.hpp
     ZigZag/RenderOrder.hpp
     ZigZag/TParameter.hpp
-    ZigZag/detail/InputOutputRelationship.hpp
-    ZigZag/detail/ParentChildRelationship.hpp
+    ZigZag/detail/InputOutput.hpp
+    ZigZag/detail/ParentChild.hpp
 )
 
 add_library(ZigZagCore STATIC ${SOURCES} ${HEADERS})
