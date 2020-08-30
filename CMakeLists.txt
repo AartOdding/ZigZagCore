@@ -4,12 +4,16 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(ZigZagCore VERSION 0.1.0)
 
+add_subdirectory(external/lua)
+add_subdirectory(external/sol2)
+
 SET(SOURCES
     ZigZag/BaseBehaviour.cpp
     ZigZag/BaseDataInput.cpp
     ZigZag/BaseDataSource.cpp
     ZigZag/BaseOperator.cpp
     ZigZag/BaseParameter.cpp
+    ZigZag/LuaBehaviour.cpp
     ZigZag/Object.cpp
     ZigZag/ObjectFactory.cpp
     ZigZag/ObjectSelection.cpp
@@ -22,6 +26,7 @@ SET(HEADERS
     ZigZag/BaseDataSource.hpp
     ZigZag/BaseOperator.hpp
     ZigZag/BaseParameter.hpp
+    ZigZag/LuaBehaviour.hpp
     ZigZag/Object.hpp
     ZigZag/ObjectFactory.hpp
     ZigZag/ObjectSelection.hpp
@@ -34,3 +39,6 @@ SET(HEADERS
 add_library(ZigZagCore STATIC ${SOURCES} ${HEADERS})
 
 target_include_directories(ZigZagCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(ZigZagCore lua)
+target_link_libraries(ZigZagCore sol2)
