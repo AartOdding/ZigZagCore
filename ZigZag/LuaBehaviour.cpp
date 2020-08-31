@@ -41,16 +41,13 @@ end
         {
             m_callbacks[i] = m_luaState[Callbacks::toString(i)];
         }
+        m_script = scriptString;
     }
 
-    void LuaBehaviour::loadScriptFile(const std::string& scriptFileName)
+
+    const std::string& LuaBehaviour::getScript()
     {
-        resetLuaState();
-        m_luaState.script_file(scriptFileName);
-        for (int i = 0; i < Callbacks::COUNT; ++i)
-        {
-            m_callbacks[i] = m_luaState[Callbacks::toString(i)];
-        }
+        return m_script;
     }
 
 

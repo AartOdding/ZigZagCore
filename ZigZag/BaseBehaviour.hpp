@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bitset>
+
 #include <ZigZag/Object.hpp>
 #include <ZigZag/detail/ParentChild.hpp>
 
@@ -7,34 +9,9 @@
 namespace ZigZag
 {
 
-class BaseBehaviour : public Object,
-                      public detail::Child<BaseBehaviour, Object>
-{
-public:
-
-    BaseBehaviour(Object* parent = nullptr, std::string_view name = std::string_view());
-
-    virtual ~BaseBehaviour() = default;
-
-    void setParent(Object* parent) override;
-
-    virtual const char* typeName() const override { return "BaseBehaviour"; }
-
-    virtual void update() = 0;
-    virtual void lateUpdate() = 0;
-
-    virtual bool allowConnection(Object* other) = 0;
-    virtual void connected(Object* other) = 0;
-    virtual void disconnected(Object* other) = 0;
-
-    virtual void childAdded(Object* child) = 0;
-    virtual void childRemoved(Object* child) = 0;
-
-protected:
-
     struct Callbacks
     {
-        enum
+        enum Callback
         {
             Update = 0,
             LateUpdate = 1,
@@ -70,7 +47,42 @@ protected:
     };
 
 
+    class BaseBehaviour : public Object,
+                          public detail::Child<BaseBehaviour, Object>
+    {
+    public:
 
-};
+
+        BaseBehaviour(Object* parent = nullptr, std::string_view name = std::string_view());
+
+        virtual ~BaseBehaviour() = default;
+
+        void setParent(Object* parent) override;
+
+        virtual const char* typeName() const override { return "BaseBehaviour"; }
+
+        bool implements(Callbacks::Callback callback) const;
+
+
+        virtual void update() { };
+        virtual void lateUpdate() { };
+
+        virtual bool allowConnection(Object* other) { return true; };
+        virtual void connected(Object* other) { };
+        virtual void disconnected(Object* other) { };
+
+        virtual void childAdded(Object* child) { };
+        virtual void childRemoved(Object* child) { };
+
+    protected:
+
+        void setImplementedCallbacks(std::bitset<64> callbacks);
+        void setCallbackImplemented(Callbacks::Callback callback, bool implemented);
+
+    private:
+
+        std::bitset<64> m_implementedCallbacks;
+
+    };
 
 }

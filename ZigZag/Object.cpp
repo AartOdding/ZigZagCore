@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <array>
+#include <cassert>
+#include <cstdint>
 #include <tuple>
 #include <stdexcept>
 
@@ -9,7 +11,7 @@
 
 
 static constexpr std::array specialAllowedCharacters{ '_', '-', '*' };
-static ZigZag::CallbackId nextCallbackId = 4567;
+
 
 static constexpr bool isAlphaNumeric(char character)
 {
@@ -177,7 +179,6 @@ Object::Object(Object* parent, std::string_view name)
     if (m_parent)
     {
         m_parent->m_children.push_back(this);
-        m_parent->executeChildrenCallback(this, true);
     }
 }
 
@@ -238,7 +239,6 @@ void Object::setParent(Object* parent)
             // m_name is now empty, oldName contains previous name.
 
             setName(oldName);
-            m_parent->executeChildrenCallback(this, true);
         }
         else
         {
@@ -412,27 +412,6 @@ const std::vector<BaseParameter*>& Object::getChildParameters() const
 }
 
 
-CallbackId Object::registerChildrenCallback(std::function<void(Object* child, bool added)> callback)
-{
-    m_childrenCallbacks.push_back({ nextCallbackId, callback });
-    return nextCallbackId++;
-}
-
-
-void Object::deregisterChildrenCallback(CallbackId callackId)
-{
-    for (auto it = m_childrenCallbacks.begin(); it != m_childrenCallbacks.end(); ++it)
-    {
-        if (it->id == callackId)
-        {
-            m_childrenCallbacks.erase(it);
-            return;
-        }
-    }
-    assert(false);
-}
-
-
 std::string Object::getClosestPotentialName(std::string_view desiredName) const
 {
     std::string cleanedName = cleanName(desiredName);
@@ -513,20 +492,11 @@ bool Object::removeFromParent()
         if (pos != parent->m_children.end())
         {
             parent->m_children.erase(pos);
-            parent->executeChildrenCallback(this, false);
             return true;
         }
     }
     return false;
 }
 
-
-void Object::executeChildrenCallback(Object* child, bool added)
-{
-    for (const auto& cb : m_childrenCallbacks)
-    {
-        cb.function(child, added);
-    }
-}
 
 }

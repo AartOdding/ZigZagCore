@@ -1,5 +1,7 @@
 #include <ZigZag/RenderOrder.hpp>
 
+#include <cassert>
+
 
 static bool isStartNode(ZigZag::BaseOperator* op)
 {
@@ -60,8 +62,7 @@ namespace ZigZag
 {
 
 RenderOrder::RenderOrder(BaseOperator* scope)
-	: m_scope(scope),
-	  m_callbackId(0)
+	: m_scope(scope)
 {
 	assert(m_scope);
 	if (m_scope)

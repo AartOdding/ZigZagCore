@@ -20,7 +20,8 @@ namespace ZigZag
         virtual const char* typeName() const override { return "LuaBehaviour"; }
 
         void loadScript(std::string_view scriptString);
-        void loadScriptFile(const std::string& scriptFileName);
+
+        const std::string& getScript();
 
 
         virtual void update();
@@ -40,6 +41,8 @@ namespace ZigZag
         sol::state m_luaState;
 
         std::array<sol::function, Callbacks::COUNT> m_callbacks;
+
+        std::string m_script;
 
     };
 
