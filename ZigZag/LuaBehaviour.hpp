@@ -3,6 +3,7 @@
 #include <ZigZag/BaseBehaviour.hpp>
 
 #include <array>
+#include <unordered_map>
 #include <sol/sol.hpp>
 
 
@@ -24,15 +25,15 @@ namespace ZigZag
         const std::string& getScript();
 
 
-        virtual void update();
-        virtual void lateUpdate();
+        virtual void update() override;
+        virtual void lateUpdate() override;
 
-        virtual bool allowConnection(Object* other);
-        virtual void connected(Object* other);
-        virtual void disconnected(Object* other);
+        virtual bool allowConnection(Object* other) override;
+        virtual void connected(Object* other) override;
+        virtual void disconnected(Object* other) override;
 
-        virtual void childAdded(Object* child);
-        virtual void childRemoved(Object* child);
+        virtual void childAdded(Object* child) override;
+        virtual void childRemoved(Object* child) override;
 
     private:
 
