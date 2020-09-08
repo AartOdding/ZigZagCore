@@ -35,6 +35,8 @@ namespace ZigZag
         virtual void childAdded(Object* child) override;
         virtual void childRemoved(Object* child) override;
 
+        static void loadDefaultScript(const std::string& path);
+
     private:
 
         void resetLuaState();
@@ -44,6 +46,8 @@ namespace ZigZag
         std::array<sol::function, Callbacks::COUNT> m_callbacks;
 
         std::string m_script;
+
+        static std::string defaultScript;
 
     };
 

@@ -1,30 +1,31 @@
 #include <ZigZag/LuaBehaviour.hpp>
 
-
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 
 namespace ZigZag
 {
 
+    std::string LuaBehaviour::defaultScript;
+
+    void LuaBehaviour::loadDefaultScript(const std::string& path)
+    {
+        if (std::filesystem::exists(path))
+        {
+            std::ifstream file(path);
+            defaultScript = std::string((std::istreambuf_iterator<char>(file)),
+                                         std::istreambuf_iterator<char>());
+        }
+    }
+
+
+
     LuaBehaviour::LuaBehaviour(Object* parent, std::string_view name)
         : BaseBehaviour(parent, name)
     {
         std::cout << "LuaBehaviour constructor" << std::endl;
-
-
-
-        loadScript(R"(
-
-function update() 
-    print('bark bark bark!')
-end
-
-)");
-
-        update();
-        update();
-        update();
-
+        loadScript(defaultScript);
     }
 
     LuaBehaviour::~LuaBehaviour()
