@@ -8,43 +8,47 @@ add_subdirectory(external/lua)
 add_subdirectory(external/sol2)
 
 SET(SOURCES
-    ZigZag/BaseBehaviour.cpp
-    ZigZag/BaseDataInput.cpp
-    ZigZag/BaseDataSource.cpp
-    ZigZag/BaseOperator.cpp
-    ZigZag/BaseParameter.cpp
-    ZigZag/LuaBehaviour.cpp
-    ZigZag/Object.cpp
-    ZigZag/ObjectFactory.cpp
-    ZigZag/ObjectSelection.cpp
-    ZigZag/PluginLoader.cpp
-    ZigZag/RenderOrder.cpp
-    ZigZag/UnixPluginLoader.cpp
-    ZigZag/WindowsPluginLoader.cpp
+    source/ZigZag/BaseBehaviour.cpp
+    source/ZigZag/BaseDataInput.cpp
+    source/ZigZag/BaseDataSource.cpp
+    source/ZigZag/BaseOperator.cpp
+    source/ZigZag/BaseParameter.cpp
+    source/ZigZag/LuaBehaviour.cpp
+    source/ZigZag/Object.cpp
+    source/ZigZag/ObjectFactory.cpp
+    source/ZigZag/ObjectSelection.cpp
+    source/ZigZag/PluginLoader.cpp
+    source/ZigZag/RenderOrder.cpp
+    source/ZigZag/UnixPluginLoader.cpp
+    source/ZigZag/WindowsPluginLoader.cpp
 )
 
 SET(HEADERS
-    ZigZag/BaseBehaviour.hpp
-    ZigZag/BaseDataInput.hpp
-    ZigZag/BaseDataSource.hpp
-    ZigZag/BaseOperator.hpp
-    ZigZag/BaseParameter.hpp
-    ZigZag/LuaBehaviour.hpp
-    ZigZag/Object.hpp
-    ZigZag/ObjectFactory.hpp
-    ZigZag/ObjectSelection.hpp
-    ZigZag/PluginLoader.hpp
-    ZigZag/RenderOrder.hpp
-    ZigZag/TParameter.hpp
-    ZigZag/UnixPluginLoader.hpp
-    ZigZag/WindowsPluginLoader.hpp
-    ZigZag/detail/InputOutput.hpp
-    ZigZag/detail/ParentChild.hpp
+    include/ZigZag/IDataSource.hpp
+    include/ZigZag/Platform.hpp
+    source/ZigZag/BaseBehaviour.hpp
+    source/ZigZag/BaseDataInput.hpp
+    source/ZigZag/BaseDataSource.hpp
+    source/ZigZag/BaseOperator.hpp
+    source/ZigZag/BaseParameter.hpp
+    source/ZigZag/LuaBehaviour.hpp
+    source/ZigZag/Object.hpp
+    source/ZigZag/ObjectFactory.hpp
+    source/ZigZag/ObjectSelection.hpp
+    source/ZigZag/PlatformPluginLoader.hpp
+    source/ZigZag/PluginLoader.hpp
+    source/ZigZag/RenderOrder.hpp
+    source/ZigZag/TParameter.hpp
+    source/ZigZag/UnixPluginLoader.hpp
+    source/ZigZag/WindowsPluginLoader.hpp
+    source/ZigZag/detail/InputOutput.hpp
+    source/ZigZag/detail/ParentChild.hpp
 )
 
 add_library(ZigZagCore STATIC ${SOURCES} ${HEADERS})
 
-target_include_directories(ZigZagCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(ZigZagCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/source)
+target_include_directories(ZigZagCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(ZigZagCore lua)
 target_link_libraries(ZigZagCore sol2)

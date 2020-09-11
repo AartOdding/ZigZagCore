@@ -15,6 +15,7 @@ namespace ZigZag
 
     void UnixPluginLoader::load(const std::string& pluginPath)
     {
+#ifdef ZIGZAG_UNIX_LIKE
         if (std::filesystem::exists(pluginPath))
         {
             if (m_plugins.count(pluginPath) == 0)
@@ -42,6 +43,7 @@ namespace ZigZag
         {
             // plugin does not exist
         }
+#endif
     }
 
 
