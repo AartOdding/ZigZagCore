@@ -17,7 +17,10 @@ SET(SOURCES
     ZigZag/Object.cpp
     ZigZag/ObjectFactory.cpp
     ZigZag/ObjectSelection.cpp
+    ZigZag/PluginLoader.cpp
     ZigZag/RenderOrder.cpp
+    ZigZag/UnixPluginLoader.cpp
+    ZigZag/WindowsPluginLoader.cpp
 )
 
 SET(HEADERS
@@ -30,8 +33,11 @@ SET(HEADERS
     ZigZag/Object.hpp
     ZigZag/ObjectFactory.hpp
     ZigZag/ObjectSelection.hpp
+    ZigZag/PluginLoader.hpp
     ZigZag/RenderOrder.hpp
     ZigZag/TParameter.hpp
+    ZigZag/UnixPluginLoader.hpp
+    ZigZag/WindowsPluginLoader.hpp
     ZigZag/detail/InputOutput.hpp
     ZigZag/detail/ParentChild.hpp
 )
