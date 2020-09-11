@@ -9,3 +9,17 @@
     #define ZIGZAG_LINUX
     #define ZIGZAG_UNIX_LIKE
 #endif
+
+
+#ifdef ZIGZAG_WINDOWS
+    #ifdef ZIGZAG_PLUGIN
+        #define ZIGZAG_API __declspec(dllexport)
+        #define ZIGZAG_C_API extern "C" __declspec(dllexport)
+    #else
+        #define ZIGZAG_API __declspec(dllimport)
+        #define ZIGZAG_C_API extern "C" __declspec(dllimport)
+    #endif
+#else
+    #define ZIGZAG_API
+    #define ZIGZAG_C_API
+#endif
